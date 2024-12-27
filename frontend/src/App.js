@@ -1,8 +1,8 @@
-import { Container, Grid, Box } from '@mui/material';
+import { Container, Box, Grid } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Header from './components/Header';
-import Sidebar from './components/Sidebar';
-import MainContent from './components/MainContent';
+import Header from './components/Header/Header';
+import Sidebar from './components/Sidebar/Sidebar';
+import MainContent from './components/MainContent/MainContent';
 
 const theme = createTheme({
   palette: {
