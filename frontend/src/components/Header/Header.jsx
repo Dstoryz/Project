@@ -1,20 +1,24 @@
 import { AppBar, Toolbar, Typography, Button, Grid } from '@mui/material';
 import PropTypes from 'prop-types';
+import { useAuth } from '../../contexts/AuthContext';
 
-// Выносим строковые константы
 const TEXTS = {
   TITLE: 'Image Generator',
   LOGIN: 'Login',
+  LOGOUT: 'Logout',
+  REGISTER: 'Register',
 };
 
-function Header({ onLoginClick }) {
+function Header() {
+  const { isAuthenticated, logout, user } = useAuth();
+
   return (
     <AppBar position="static">
       <Toolbar>
         <Grid 
           container 
           alignItems="center" 
-          justifyContent="space-between" // Улучшаем выравнивание
+          justifyContent="space-between"
           spacing={2}
         >
           <Grid item>
@@ -23,25 +27,40 @@ function Header({ onLoginClick }) {
             </Typography>
           </Grid>
           <Grid item>
-            <Button 
-              color="inherit" 
-              onClick={onLoginClick}
-            >
-              {TEXTS.LOGIN}
-            </Button>
+            {isAuthenticated ? (
+              <>
+                <Typography variant="body1" sx={{ mr: 2 }}>
+                  {user?.username}
+                </Typography>
+                <Button 
+                  color="inherit"
+                  onClick={logout}
+                >
+                  {TEXTS.LOGOUT}
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button 
+                  color="inherit"
+                  href="/login"
+                  sx={{ mr: 1 }}
+                >
+                  {TEXTS.LOGIN}
+                </Button>
+                <Button 
+                  color="inherit"
+                  href="/register"
+                >
+                  {TEXTS.REGISTER}
+                </Button>
+              </>
+            )}
           </Grid>
         </Grid>
       </Toolbar>
     </AppBar>
   );
 }
-
-Header.propTypes = {
-  onLoginClick: PropTypes.func,
-};
-
-Header.defaultProps = {
-  onLoginClick: () => {},
-};
 
 export default Header; 
