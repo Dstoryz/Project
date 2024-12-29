@@ -1,18 +1,12 @@
-import { createTheme } from '@mui/material';
-
-// Определяем константы для цветов
-const COLORS = {
-  PRIMARY: '#1976d2',
-  SECONDARY: '#dc004e',
-};
+import { createTheme } from '@mui/material/styles';
 
 export const theme = createTheme({
   palette: {
     primary: {
-      main: COLORS.PRIMARY,
+      main: '#1976d2',
     },
     secondary: {
-      main: COLORS.SECONDARY,
+      main: '#dc004e',
     },
   },
 }); 

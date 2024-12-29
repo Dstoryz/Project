@@ -1,40 +1,31 @@
-import { Container, Box, Grid } from '@mui/material';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { AuthProvider } from './contexts/AuthContext';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { Container, CssBaseline } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
 import Header from './components/Header/Header';
-import Sidebar from './components/Sidebar/Sidebar';
-import MainContent from './components/MainContent/MainContent';
+import { theme } from './theme/theme';
+import './styles/global.css';
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#1976d2',
-    },
-    secondary: {
-      main: '#dc004e',
-    },
-  },
-});
+// Временные компоненты для тестирования
+const HomePage = () => <div>Home Page</div>;
+const LoginPage = () => <div>Login Page</div>;
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <AuthProvider>
-        <Box sx={{ flexGrow: 1 }}>
+    <>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <div className="app-container">
           <Header />
-          <Container maxWidth="xl">
-            <Grid container spacing={3} sx={{ mt: 2 }}>
-              <Grid item xs={12} md={3}>
-                <Sidebar />
-              </Grid>
-              <Grid item xs={12} md={9}>
-                <MainContent />
-              </Grid>
-            </Grid>
+          <Container component="main" maxWidth="xl" className="main-content">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/login" element={<LoginPage />} />
+            </Routes>
           </Container>
-        </Box>
-      </AuthProvider>
-    </ThemeProvider>
+        </div>
+      </ThemeProvider>
+    </>
   );
 }
 

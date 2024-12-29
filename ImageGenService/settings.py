@@ -29,7 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',  # React development server
+    "http://localhost:3000",  # React dev server
 ]
 
 
