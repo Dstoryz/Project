@@ -10,6 +10,19 @@
 }
 
 .header-title {
-  font-size: 1.25rem;
+  font-size: var(--font-size-large);
   font-weight: 500;
+}
+
+.header-buttons {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.header-buttons button {
+  text-transform: none;
+}
+
+.header-buttons button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 } 

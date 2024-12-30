@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
+import { Box, Button, TextField, Typography, Container, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { Box, Paper, TextField, Button, Typography, Link } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { authService } from '../../api/authService';
 
 function RegisterPage() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -12,147 +12,122 @@ function RegisterPage() {
     confirmPassword: ''
   });
   const [error, setError] = useState('');
-  const { register } = useAuth();
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
+    setFormData(prevState => ({
+      ...prevState,
       [name]: value
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setError('');
 
-    // Расширенная валидация
-    if (!formData.username.trim()) {
-      setError('Username is required');
-      return;
-    }
-
-    if (!formData.email.trim()) {
-      setError('Email is required');
-      return;
-    }
-
-    if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      setError('Invalid email format');
-      return;
-    }
-
+    // Проверка совпадения паролей
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       return;
     }
 
-    if (formData.password.length < 8) {
-      setError('Password must be at least 8 characters long');
-      return;
-    }
-
     try {
-      const success = await register({
-        username: formData.username.trim(),
-        email: formData.email.trim(),
+      const response = await authService.register({
+        username: formData.username,
+        email: formData.email,
         password: formData.password
       });
-
-      if (success) {
-        navigate('/');
-      }
-    } catch (err) {
-      // Более детальная обработка ошибок
-      if (err.response?.data) {
-        // Обработка ошибок от Django backend
-        const backendError = err.response.data;
-        if (backendError.username) {
-          setError(`Username error: ${backendError.username[0]}`);
-        } else if (backendError.email) {
-          setError(`Email error: ${backendError.email[0]}`);
-        } else if (backendError.password) {
-          setError(`Password error: ${backendError.password[0]}`);
-        } else {
-          setError(backendError.message || 'Registration failed');
-        }
-      } else {
-        setError('Network error. Please try again.');
-      }
+      console.log('Registration successful:', response);
+      navigate('/login'); // Перенаправляем на страницу логина после успешной регистрации
+    } catch (error) {
+      setError(error.response?.data?.message || 'Registration failed. Please try again.');
     }
   };
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-      <Paper sx={{ p: 4, maxWidth: 400, width: '100%' }}>
-        <Typography variant="h5" component="h1" gutterBottom>
-          Register
+    <Container component="main" maxWidth="xs">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          Sign up
         </Typography>
         {error && (
-          <Typography color="error" sx={{ mb: 2 }}>
+          <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
             {error}
-          </Typography>
+          </Alert>
         )}
-        <form onSubmit={handleSubmit}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
+            margin="normal"
+            required
             fullWidth
+            id="username"
             label="Username"
             name="username"
-            margin="normal"
+            autoComplete="username"
+            autoFocus
             value={formData.username}
             onChange={handleChange}
-            required
           />
           <TextField
-            fullWidth
-            label="Email"
-            name="email"
-            type="email"
             margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
             value={formData.email}
             onChange={handleChange}
-            required
           />
           <TextField
-            fullWidth
-            label="Password"
-            name="password"
-            type="password"
             margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="new-password"
             value={formData.password}
             onChange={handleChange}
-            required
           />
           <TextField
-            fullWidth
-            label="Confirm Password"
-            name="confirmPassword"
-            type="password"
             margin="normal"
+            required
+            fullWidth
+            name="confirmPassword"
+            label="Confirm Password"
+            type="password"
+            id="confirmPassword"
+            autoComplete="new-password"
             value={formData.confirmPassword}
             onChange={handleChange}
-            required
           />
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3 }}
+            sx={{ mt: 3, mb: 2 }}
           >
-            Register
+            Sign Up
           </Button>
-          <Box sx={{ mt: 2, textAlign: 'center' }}>
-            <Typography variant="body2">
-              Already have an account?{' '}
-              <Link component={RouterLink} to="/login">
-                Login here
-              </Link>
-            </Typography>
-          </Box>
-        </form>
-      </Paper>
-    </Box>
+          <Button
+            fullWidth
+            variant="text"
+            onClick={() => navigate('/login')}
+          >
+            Already have an account? Sign In
+          </Button>
+        </Box>
+      </Box>
+    </Container>
   );
 }
 

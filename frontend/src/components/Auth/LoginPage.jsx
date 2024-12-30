@@ -1,90 +1,113 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { Box, Paper, TextField, Button, Typography } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Box, Button, TextField, Typography, Container, Alert, Snackbar } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { authService } from '../../api/authService';
+import { useAuth } from '../../hooks/useAuth';
 
 function LoginPage() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const { login } = useAuth();
   const navigate = useNavigate();
+  const { login } = useAuth();
+  const [formData, setFormData] = useState({
+    username: '',
+    password: ''
+  });
+  const [error, setError] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setError('');
-
-    if (!username.trim()) {
-      setError('Username is required');
-      return;
-    }
-
-    if (!password) {
-      setError('Password is required');
-      return;
-    }
-
+    
     try {
-      const success = await login(username.trim(), password);
-      if (success) {
+      const response = await authService.login(formData);
+      login(response.user);
+      setShowSuccess(true);
+      
+      setTimeout(() => {
         navigate('/');
-      }
-    } catch (err) {
-      if (err.response?.data) {
-        setError(err.response.data.detail || 'Invalid credentials');
-      } else {
-        setError('Network error. Please try again.');
-      }
+      }, 1500);
+    } catch (error) {
+      setError(error.message);
     }
   };
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-      <Paper sx={{ p: 4, maxWidth: 400, width: '100%' }}>
-        <Typography variant="h5" component="h1" gutterBottom>
-          Login
+    <Container component="main" maxWidth="xs">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          Sign in
         </Typography>
         {error && (
-          <Typography color="error" sx={{ mb: 2 }}>
+          <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
             {error}
-          </Typography>
+          </Alert>
         )}
-        <form onSubmit={handleSubmit}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
-            fullWidth
-            label="Username"
             margin="normal"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            required
+            fullWidth
+            id="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
+            autoFocus
+            value={formData.username}
+            onChange={handleChange}
           />
           <TextField
+            margin="normal"
+            required
             fullWidth
+            name="password"
             label="Password"
             type="password"
-            margin="normal"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            id="password"
+            autoComplete="current-password"
+            value={formData.password}
+            onChange={handleChange}
           />
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3 }}
+            sx={{ mt: 3, mb: 2 }}
           >
-            Login
+            Sign In
           </Button>
-          <Box sx={{ mt: 2, textAlign: 'center' }}>
-            <Typography variant="body2">
-              Don't have an account?{' '}
-              <Link component={RouterLink} to="/register">
-                Register here
-              </Link>
-            </Typography>
-          </Box>
-        </form>
-      </Paper>
-    </Box>
+          <Button
+            fullWidth
+            variant="text"
+            onClick={() => navigate('/register')}
+          >
+            Don't have an account? Sign Up
+          </Button>
+        </Box>
+      </Box>
+      
+      <Snackbar
+        open={showSuccess}
+        autoHideDuration={1500}
+        onClose={() => setShowSuccess(false)}
+        message="Login successful!"
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      />
+    </Container>
   );
 }
 
