@@ -29,11 +29,6 @@ api.interceptors.response.use(
 export const authService = {
   login: async (credentials) => {
     try {
-      console.log('Login attempt with:', {
-        url: `${API_BASE_URL}${ENDPOINTS.LOGIN}`,
-        data: credentials
-      });
-
       const response = await api.post(ENDPOINTS.LOGIN, {
         username: credentials.username,
         password: credentials.password
@@ -43,24 +38,18 @@ export const authService = {
 
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
-        localStorage.setItem('refresh', response.data.refresh);
         api.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
       }
 
-      return response.data;
+      return {
+        token: response.data.token,
+        user: {
+          username: credentials.username
+        }
+      };
     } catch (error) {
-      const errorMessage = error.response?.data?.detail || 
-                         error.response?.data?.error || 
-                         error.response?.data || 
-                         'Authentication failed';
-                         
-      console.error('Login error:', {
-        status: error.response?.status,
-        data: error.response?.data,
-        message: errorMessage
-      });
-
-      throw new Error(errorMessage);
+      console.error('Login error:', error.response?.data);
+      throw new Error(error.response?.data?.detail || 'Login failed');
     }
   },
 

@@ -28,14 +28,17 @@ function LoginPage() {
     
     try {
       const response = await authService.login(formData);
-      login(response.user);
+      console.log('Login response:', response);
+      
+      login(response.user || { username: formData.username });
+      
       setShowSuccess(true);
       
       setTimeout(() => {
         navigate('/');
       }, 1500);
     } catch (error) {
-      setError(error.message);
+      setError(error.message || 'Login failed');
     }
   };
 

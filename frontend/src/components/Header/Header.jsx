@@ -1,10 +1,17 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 import './Header.css';
 
 function Header() {
   const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <AppBar position="static" className="header">
@@ -17,18 +24,29 @@ function Header() {
           Image Generator
         </Typography>
         <div className="header-buttons">
-          <Button 
-            color="inherit" 
-            onClick={() => navigate('/login')}
-          >
-            Login
-          </Button>
-          <Button 
-            color="inherit" 
-            onClick={() => navigate('/register')}
-          >
-            Register
-          </Button>
+          {isAuthenticated ? (
+            <Button 
+              color="inherit" 
+              onClick={handleLogout}
+            >
+              Logout
+            </Button>
+          ) : (
+            <>
+              <Button 
+                color="inherit" 
+                onClick={() => navigate('/login')}
+              >
+                Login
+              </Button>
+              <Button 
+                color="inherit" 
+                onClick={() => navigate('/register')}
+              >
+                Register
+              </Button>
+            </>
+          )}
         </div>
       </Toolbar>
     </AppBar>
