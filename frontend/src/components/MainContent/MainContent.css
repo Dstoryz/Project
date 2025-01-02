@@ -1,0 +1,167 @@
+.main-container {
+  min-height: 100vh;
+  background-color: #1a1a1a;
+  color: white;
+  padding: 16px;
+}
+
+.tab-panel {
+  background-color: #2d2d2d;
+  color: white;
+  margin-bottom: 16px;
+  overflow-x: auto;
+}
+
+.tab-item {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.tab-item.selected {
+  color: #4CAF50;
+}
+
+.content-panel {
+  background-color: #2d2d2d;
+  color: white;
+  padding: 16px;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.image-container {
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1a1a1a;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.image-container img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.form-field {
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.text-input {
+  color: white;
+  width: 100%;
+}
+
+.text-input .MuiOutlinedInput-root {
+  color: white;
+}
+
+.text-input .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(255, 255, 255, 0.23);
+}
+
+.text-input:hover .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.submit-button {
+  height: 48px;
+  background-color: #4CAF50;
+  width: 100%;
+}
+
+.submit-button:hover {
+  background-color: #45a049;
+}
+
+@media (max-width: 600px) {
+  .main-container {
+    padding: 8px;
+  }
+
+  .content-panel {
+    padding: 12px;
+  }
+
+  .image-container {
+    height: 400px;
+  }
+
+  .tab-panel .MuiTabs-scroller {
+    height: 48px;
+  }
+
+  .tab-item {
+    font-size: 14px;
+    min-height: 48px;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 960px) {
+  .image-container {
+    height: 500px;
+  }
+}
+
+@media (min-width: 961px) {
+  .main-container {
+    padding: 24px;
+  }
+
+  .content-panel {
+    padding: 24px;
+  }
+
+  .image-container {
+    height: 700px;
+  }
+}
+
+.grid-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 961px) {
+  .grid-container {
+    flex-direction: row;
+  }
+
+  .main-content {
+    flex: 2;
+  }
+
+  .settings-panel {
+    flex: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .text-input .MuiInputBase-input {
+    font-size: 14px;
+  }
+
+  .form-control {
+    margin-bottom: 12px;
+  }
+
+  .form-control .MuiInputLabel-root {
+    font-size: 14px;
+  }
+
+  .form-control .MuiSelect-select {
+    font-size: 14px;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  .submit-button {
+    height: 40px;
+    font-size: 14px;
+  }
+} 
