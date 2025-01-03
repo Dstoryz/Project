@@ -4,16 +4,23 @@ import SettingsIcon from '@mui/icons-material/Settings';
 
 function ImageDisplay({ loading, generatedImage }) {
   return (
-    <Paper className="content-panel">
+    <Paper 
+      className="content-panel"
+      sx={{
+        width: '100%',         // Полная ширина
+        maxWidth: '1024px',    // Максимальная ширина
+        margin: '20px auto',   // Центрирование и отступы
+        backgroundColor: '#2d2d2d'
+      }}
+    >
       <Box sx={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         mb: 2,
-        flexWrap: 'wrap',
-        gap: 1
+        padding: '16px 20px'
       }}>
-        <Typography variant="h6" sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}>
+        <Typography variant="h6">
           Результат генерации
         </Typography>
         <Tooltip title="Настройки">
@@ -22,8 +29,18 @@ function ImageDisplay({ loading, generatedImage }) {
           </IconButton>
         </Tooltip>
       </Box>
-      <Divider className="divider" />
-      <Box className="image-container">
+      <Divider />
+      <Box 
+        className="image-container"
+        sx={{
+          height: '720px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '20px',
+          backgroundColor: '#1a1a1a'
+        }}
+      >
         {loading ? (
           <CircularProgress sx={{ color: '#4CAF50' }} />
         ) : generatedImage ? (
@@ -33,7 +50,7 @@ function ImageDisplay({ loading, generatedImage }) {
             style={{
               maxWidth: '100%',
               maxHeight: '100%',
-              objectFit: 'contain',
+              objectFit: 'contain'
             }}
           />
         ) : (

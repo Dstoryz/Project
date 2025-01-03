@@ -59,6 +59,12 @@ function MainContent() {
       <TabPanel activeTab={activeTab} onTabChange={handleTabChange} />
       
       <div className="grid-container">
+        <div className="left-panel">
+          <div style={{ padding: '20px', color: 'white' }}>
+            Левая панель
+          </div>
+        </div>
+
         <div className="main-content">
           <ImageDisplay 
             loading={loading} 
