@@ -13,18 +13,31 @@ function PromptForm({ formData, loading, onChange, onSubmit }) {
           value={formData.prompt}
           onChange={onChange}
           multiline
-          rows={{ xs: 2, sm: 3 }}
+          rows={6}
           required
+          InputProps={{
+            style: {
+              fontSize: '16px',
+              lineHeight: '1.5',
+              padding: '12px'
+            }
+          }}
+          InputLabelProps={{
+            style: {
+              fontSize: '14px'
+            }
+          }}
         />
-        <Button
-          className="submit-button"
-          type="submit"
-          variant="contained"
-          fullWidth
-          disabled={loading}
-        >
-          {loading ? <CircularProgress size={20} /> : 'Создать'}
-        </Button>
+        <div style={{ textAlign: 'center' }}>
+          <Button
+            className="submit-button"
+            type="submit"
+            variant="contained"
+            disabled={loading}
+          >
+            {loading ? <CircularProgress size={20} /> : 'Создать'}
+          </Button>
+        </div>
       </form>
     </Paper>
   );
