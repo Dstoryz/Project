@@ -1,0 +1,27 @@
+.left-panel {
+  height: 100%;
+  padding: 20px;
+  background-color: var(--primary-bg-color);
+}
+
+.left-panel-title {
+  margin-bottom: 16px;
+}
+
+.left-panel-item {
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.left-panel-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.left-panel .MuiListItemIcon-root {
+  min-width: 40px;
+  color: var(--text-secondary);
+}
+
+.left-panel .MuiListItemText-primary {
+  color: var(--text-primary);
+} 

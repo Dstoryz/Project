@@ -1,43 +1,41 @@
 import React from 'react';
-import { Paper, TextField, Button, CircularProgress } from '@mui/material';
+import { Paper, TextField, Button, Box, Typography } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
+import './PromptForm.css';
 
 function PromptForm({ formData, loading, onChange, onSubmit }) {
   return (
-    <Paper className="content-panel">
+    <Paper className="prompt-form">
+      <Typography variant="h6" className="prompt-form-title">
+        Создать изображение
+      </Typography>
+      
       <form onSubmit={onSubmit}>
         <TextField
-          className="text-input form-field"
+          className="prompt-input"
           fullWidth
           label="Опишите изображение"
           name="prompt"
           value={formData.prompt}
           onChange={onChange}
           multiline
-          rows={6}
+          rows={4}
           required
-          InputProps={{
-            style: {
-              fontSize: '16px',
-              lineHeight: '1.5',
-              padding: '12px'
-            }
-          }}
-          InputLabelProps={{
-            style: {
-              fontSize: '14px'
-            }
-          }}
+          variant="outlined"
+          placeholder="Например: космический корабль в стиле киберпанк"
         />
-        <div style={{ textAlign: 'center' }}>
+        
+        <Box className="prompt-form-actions">
           <Button
-            className="submit-button"
             type="submit"
             variant="contained"
             disabled={loading}
+            endIcon={<SendIcon />}
+            className="submit-button"
           >
-            {loading ? <CircularProgress size={20} /> : 'Создать'}
+            {loading ? 'Создаем...' : 'Создать'}
           </Button>
-        </div>
+        </Box>
       </form>
     </Paper>
   );

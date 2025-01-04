@@ -1,0 +1,21 @@
+.settings-panel {
+  padding: 20px;
+}
+
+.settings-form-control {
+  margin-bottom: 24px;
+}
+
+.settings-slider-container {
+  margin-bottom: 24px;
+}
+
+.settings-model-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-error {
+  margin-top: 16px;
+  color: #f44336;
+} 

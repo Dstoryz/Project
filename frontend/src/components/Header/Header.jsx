@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Button } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import './Header.css';
@@ -8,46 +8,53 @@ function Header() {
   const navigate = useNavigate();
   const { isAuthenticated, logout } = useAuth();
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
   return (
-    <AppBar position="static" className="header">
+    <AppBar position="static" className="header" elevation={0}>
       <Toolbar className="header-toolbar">
         <Typography 
+          variant="h6"
           className="header-title"
           onClick={() => navigate('/')}
-          style={{ cursor: 'pointer' }}
         >
           Image Generator
         </Typography>
-        <div className="header-buttons">
+        <Box className="header-buttons">
           {isAuthenticated ? (
-            <Button 
-              color="inherit" 
-              onClick={handleLogout}
-            >
-              Logout
-            </Button>
+            <>
+              <Button 
+                variant="outlined" 
+                color="inherit"
+                onClick={() => navigate('/profile')}
+              >
+                Profile
+              </Button>
+              <Button 
+                variant="contained" 
+                color="primary"
+                onClick={logout}
+              >
+                Logout
+              </Button>
+            </>
           ) : (
             <>
               <Button 
-                color="inherit" 
+                variant="outlined" 
+                color="inherit"
                 onClick={() => navigate('/login')}
               >
                 Login
               </Button>
               <Button 
-                color="inherit" 
+                variant="contained" 
+                color="primary"
                 onClick={() => navigate('/register')}
               >
                 Register
               </Button>
             </>
           )}
-        </div>
+        </Box>
       </Toolbar>
     </AppBar>
   );

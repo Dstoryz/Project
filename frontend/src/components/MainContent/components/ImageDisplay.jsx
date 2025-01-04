@@ -1,25 +1,12 @@
 import React from 'react';
 import { Paper, Box, Typography, Divider, IconButton, Tooltip, CircularProgress } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
+import './ImageDisplay.css';
 
 function ImageDisplay({ loading, generatedImage }) {
   return (
-    <Paper 
-      className="content-panel"
-      sx={{
-        width: '100%',         // Полная ширина
-        maxWidth: '1024px',    // Максимальная ширина
-        margin: '20px auto',   // Центрирование и отступы
-        backgroundColor: '#2d2d2d'
-      }}
-    >
-      <Box sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        mb: 2,
-        padding: '16px 20px'
-      }}>
+    <Paper className="content-panel">
+      <Box className="header-box">
         <Typography variant="h6">
           Результат генерации
         </Typography>
@@ -30,31 +17,17 @@ function ImageDisplay({ loading, generatedImage }) {
         </Tooltip>
       </Box>
       <Divider />
-      <Box 
-        className="image-container"
-        sx={{
-          height: '720px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: '20px',
-          backgroundColor: '#1a1a1a'
-        }}
-      >
+      <Box className="image-container">
         {loading ? (
-          <CircularProgress sx={{ color: '#4CAF50' }} />
+          <CircularProgress className="progress-indicator" />
         ) : generatedImage ? (
           <img
             src={generatedImage}
             alt="Generated"
-            style={{
-              maxWidth: '100%',
-              maxHeight: '100%',
-              objectFit: 'contain'
-            }}
+            className="generated-image"
           />
         ) : (
-          <Typography sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+          <Typography className="placeholder-text">
             Здесь появится сгенерированное изображение
           </Typography>
         )}

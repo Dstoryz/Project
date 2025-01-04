@@ -6,6 +6,7 @@ import TabPanel from './components/TabPanel';
 import ImageDisplay from './components/ImageDisplay';
 import PromptForm from './components/PromptForm';
 import Settings from './components/Settings';
+import LeftPanel from './components/LeftPanel';
 import './MainContent.css';
 
 function MainContent() {
@@ -22,18 +23,23 @@ function MainContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Обработчик переключения вкладок
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
 
+  // Обработчик изменений в форме
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    const { name, value } = e.target || {};
+    if (name) {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
+  // Обработчик отправки формы
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
@@ -46,9 +52,9 @@ function MainContent() {
 
     try {
       const response = await api.post('/api/generation/generate/', formData);
-      setGeneratedImage(response.data.generated_image);
+      setGeneratedImage(response?.data?.generated_image);
     } catch (err) {
-      setError(err.response?.data?.message || 'Ошибка генерации изображения');
+      setError(err?.response?.data?.message || 'Ошибка генерации изображения');
     } finally {
       setLoading(false);
     }
@@ -58,14 +64,12 @@ function MainContent() {
     <Box className="main-container">
       <TabPanel activeTab={activeTab} onTabChange={handleTabChange} />
       
-      <div className="grid-container">
-        <div className="left-panel">
-          <div style={{ padding: '20px', color: 'white' }}>
-            Левая панель
-          </div>
+      <div className="main-grid-container">
+        <div className="main-left-panel">
+          <LeftPanel />
         </div>
 
-        <div className="main-content">
+        <div className="main-content-area">
           <ImageDisplay 
             loading={loading} 
             generatedImage={generatedImage} 
@@ -78,7 +82,7 @@ function MainContent() {
           />
         </div>
 
-        <div className="settings-panel">
+        <div className="main-settings-panel">
           <Settings
             formData={formData}
             onChange={handleChange}
@@ -90,4 +94,4 @@ function MainContent() {
   );
 }
 
-export default MainContent; 
+export default MainContent;

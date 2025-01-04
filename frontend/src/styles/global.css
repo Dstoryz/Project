@@ -1,97 +1,103 @@
-/* Базовые настройки */
+/*/home/alex/Documents/Project/frontend/src/styles/global.css*/
+
+/* Базовые переменные */
+:root {
+  --primary-bg-color: #1a1a1a;
+  --primary-text-color: white;
+  --accent-color: #2196f3;
+  --panel-width: 300px;
+  --header-height: 64px;
+  --content-max-width: 1000px;
+}
+
+/* Базовые стили */
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
-}
-
-html, body {
   margin: 0;
   padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-  background-color: #1a1a1a;
-  color: white;
 }
 
-#root {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  min-height: 100vh;
-  overflow-x: hidden;
+body {
+  background-color: var(--background-dark);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* Контейнер приложения */
 .app-container {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  position: relative;
-}
-
-/* Контейнер сетки */
-.grid-container {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  min-height: calc(100vh - 32px);
-  margin: 0;
-  padding: 0;
-  position: relative;
-}
-
-/* Левая панель */
-.left-panel {
-  position: fixed;
-  left: 0;
-  top: 64px;
-  width: 300px;
-  height: calc(100vh - 64px);
-  background-color: #2196f3;
-  margin: 0;
-  padding: 0;
-  z-index: 100;
-}
-
-/* Центральная колонка */
-.main-content {
-  flex: 0 0 auto;
-  width: 1000px;
-  margin: 0 auto;
-  padding: 0;
-  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 0;
+  min-height: 100vh;
 }
 
-/* Правая колонка */
-.settings-panel {
-  position: fixed;
-  right: 0;
-  top: 64px;
-  width: 300px;
-  height: 100%;
-  z-index: 100;
+/* Основной контент */
+.main-content {
+  flex: 1;
+  padding: var(--spacing-lg);
+}
+
+/* Сетка */
+.grid-container {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  gap: var(--spacing-lg);
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+}
+
+/* Общие компоненты */
+.card {
+  background-color: var(--background-light);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-normal);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* Кнопки */
+.button {
+  background-color: var(--primary-color);
+  color: var(--text-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.button:hover {
+  background-color: var(--primary-dark);
+}
+
+/* Формы */
+.input-field {
+  background-color: var(--surface-dark);
+  border: 1px solid var(--surface-dark);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  padding: var(--spacing-sm);
+  width: 100%;
+  transition: border-color var(--transition-fast);
+}
+
+.input-field:focus {
+  border-color: var(--primary-color);
+  outline: none;
 }
 
 /* Медиа-запросы */
-@media (max-width: 1200px) {
+@media (max-width: 1024px) {
   .grid-container {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
-
-  .left-panel,
-  .main-content,
-  .settings-panel {
-    width: 100%;
-    max-width: none;
-    min-width: 0;
+  
+  .sidebar {
+    display: none;
   }
-} 
+}

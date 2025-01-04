@@ -10,6 +10,7 @@ import {
   Slider,
   Box 
 } from '@mui/material';
+import './Settings.css';
 
 // Настройки из backend (models_config.py)
 const MODEL_OPTIONS = [
@@ -51,14 +52,14 @@ const IMAGE_SIZES = [
 
 function Settings({ formData, onChange, error }) {
   return (
-    <Paper className="content-panel">
+    <Paper className="settings-panel">
       <Typography variant="h6" gutterBottom>
         Настройки генерации
       </Typography>
       <Divider sx={{ mb: 2 }} />
 
       {/* Выбор модели */}
-      <FormControl fullWidth sx={{ mb: 3 }}>
+      <FormControl className="settings-form-control" fullWidth>
         <InputLabel>Модель</InputLabel>
         <Select
           name="model"
@@ -80,7 +81,7 @@ function Settings({ formData, onChange, error }) {
       </FormControl>
 
       {/* Выбор стиля */}
-      <FormControl fullWidth sx={{ mb: 3 }}>
+      <FormControl className="settings-form-control" fullWidth>
         <InputLabel>Стиль</InputLabel>
         <Select
           name="style"
@@ -97,7 +98,7 @@ function Settings({ formData, onChange, error }) {
       </FormControl>
 
       {/* Размер изображения */}
-      <FormControl fullWidth sx={{ mb: 3 }}>
+      <FormControl className="settings-form-control" fullWidth>
         <InputLabel>Размер изображения</InputLabel>
         <Select
           name="size"
@@ -114,7 +115,7 @@ function Settings({ formData, onChange, error }) {
       </FormControl>
 
       {/* Количество шагов */}
-      <Box sx={{ mb: 3 }}>
+      <Box className="settings-slider-container">
         <Typography gutterBottom>
           Количество шагов: {formData.n_steps}
         </Typography>
@@ -135,7 +136,7 @@ function Settings({ formData, onChange, error }) {
       </Box>
 
       {error && (
-        <Typography color="error" sx={{ mt: 2 }}>
+        <Typography className="settings-error">
           {error}
         </Typography>
       )}

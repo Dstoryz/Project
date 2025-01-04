@@ -1,19 +1,43 @@
-.content-panel {
-  background-color: #2d2d2d;
-  padding: 16px;
-  margin-bottom: 16px;
-  border-radius: 4px;
-}
-
-.image-container {
-  height: 720px;
+/* MainContent.css */
+.main-container {
+  width: 100%;
+  min-height: calc(100vh - var(--header-height));
   display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #1a1a1a;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  overflow: hidden;
+  flex-direction: column;
+  background-color: var(--primary-bg-color);
+  color: var(--primary-text-color);
 }
 
-/* Остальные специфичные стили компонента */
+.main-grid-container {
+  display: grid;
+  grid-template-columns: minmax(200px, 300px) 1fr minmax(200px, 300px);
+  gap: 20px;
+  padding: 20px;
+  align-items: start;
+}
+
+.main-left-panel,
+.main-content-area,
+.main-settings-panel {
+  background-color: #2a2a2a;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.main-content-area {
+  text-align: center;
+}
+
+@media (max-width: 1200px) {
+  .main-grid-container {
+    grid-template-columns: 1fr;
+  }
+
+  .main-left-panel,
+  .main-content-area,
+  .main-settings-panel {
+    width: 100%;
+    box-shadow: none;
+  }
+}

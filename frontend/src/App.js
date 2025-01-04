@@ -5,7 +5,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import Header from './components/Header/Header';
 import LoginPage from './components/Auth/LoginPage';
 import RegisterPage from './components/Auth/RegisterPage';
-import MainContent from './components/MainContent/MainContent';
+import MainContent from './components/MainContent/MainContentDev';
 import { AuthProvider } from './contexts/AuthContext';
 import { theme } from './theme/theme';
 import './styles/global.css';
