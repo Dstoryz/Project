@@ -1,12 +1,15 @@
 import api from './api';
-import { ENDPOINTS } from './config';
+import { ENDPOINTS, API_CONFIG } from './config';
 
 export const generationService = {
   async generateImage(data) {
     try {
-      const response = await api.post(ENDPOINTS.GENERATE_IMAGE, data);
+      const response = await api.post(ENDPOINTS.GENERATE, data, {
+        timeout: API_CONFIG.GENERATION_TIMEOUT
+      });
       return response.data;
     } catch (error) {
+      console.error('Image generation error:', error);
       throw error;
     }
   },

@@ -1,12 +1,15 @@
-export const API_BASE_URL = 'http://localhost:8000';
+export const API_BASE_URL = 'http://localhost:8000/api';
 
 export const ENDPOINTS = {
-  GENERATE_IMAGE: '/api/generation/generate/',
-  HISTORY: '/api/generation/history/',
+  GENERATE: '/generation/generate/',
+  HISTORY: '/generation/history/',
+  LOGIN: '/login/',
+  REFRESH: '/token/refresh/',
 };
 
 export const API_CONFIG = {
-  TIMEOUT: 30000,
+  TIMEOUT: 60000,
+  GENERATION_TIMEOUT: 120000,
   RETRY_ATTEMPTS: 3,
   RETRY_DELAY: 1000,
 }; 

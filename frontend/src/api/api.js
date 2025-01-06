@@ -1,3 +1,5 @@
+/*/home/alex/Documents/Project/frontend/src/api/api.js*/
+
 import axios from 'axios';
 import { API_BASE_URL } from './config';
 
@@ -7,7 +9,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000,
+  timeout: 60000,
 });
 
 // Добавляем токен к каждому запросу

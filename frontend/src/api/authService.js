@@ -1,11 +1,13 @@
+/*/home/alex/Documents/Project/frontend/src/api/authService.js*/
+
 import api from './api';
+import { ENDPOINTS } from './config';
 
 export const authService = {
   async login(credentials) {
     try {
       console.log('Attempting login with:', credentials.username);
-      const response = await api.post('/api/login/', credentials, {
-        // Добавляем специальные настройки для логина
+      const response = await api.post(ENDPOINTS.LOGIN, credentials, {
         timeout: 5000,
         retries: 2,
         headers: {
@@ -14,11 +16,13 @@ export const authService = {
       });
       
       console.log('Login response:', response.data);
-      const { token, refresh } = response.data;
       
+      // Сохраняем токены после успешного логина
+      const { token, refresh } = response.data;
       localStorage.setItem('token', token);
       localStorage.setItem('refresh', refresh);
       
+      // Устанавливаем токен в заголовки для последующих запросов
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       
       return response.data;

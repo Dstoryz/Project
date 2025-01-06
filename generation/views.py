@@ -22,7 +22,7 @@ from django.contrib.auth import authenticate, login
 logger = logging.getLogger(__name__)
 
 # Добавляем класс GetCSRFToken
-@method_decorator(ensure_csrf_cookie, name='dispatch')
+@method_decorator(ensure_csrf_cookie, name='dispatch') # CSRF отключён, убедитесь, что токен не требуется
 class GetCSRFToken(View):
     def get(self, request):
         return JsonResponse({'detail': 'CSRF cookie set'})
