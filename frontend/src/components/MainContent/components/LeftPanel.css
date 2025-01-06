@@ -1,27 +1,53 @@
 .left-panel {
   height: 100%;
-  padding: 20px;
-  background-color: var(--primary-bg-color);
+  background-color: var(--background-light);
+  padding: var(--spacing-lg);
 }
 
 .left-panel-title {
-  margin-bottom: 16px;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-lg);
+  padding-left: var(--spacing-md);
+}
+
+.left-panel-list {
+  padding: 0 !important;
 }
 
 .left-panel-item {
-  border-radius: 4px;
-  margin-bottom: 8px;
+  padding: var(--spacing-md) !important;
+  border-radius: var(--radius-md) !important;
+  transition: all var(--transition-fast) !important;
 }
 
 .left-panel-item:hover {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.05) !important;
 }
 
-.left-panel .MuiListItemIcon-root {
-  min-width: 40px;
+.left-panel-item.primary {
+  background-color: var(--primary-color) !important;
+}
+
+.left-panel-item.primary:hover {
+  background-color: var(--primary-dark) !important;
+}
+
+.left-panel-icon {
+  min-width: 40px !important;
   color: var(--text-secondary);
 }
 
-.left-panel .MuiListItemText-primary {
-  color: var(--text-primary);
+.left-panel-item.primary .left-panel-icon,
+.left-panel-item.primary .MuiListItemText-primary {
+  color: white !important;
+}
+
+.left-panel-divider {
+  margin: var(--spacing-sm) 0 !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.MuiListItemText-primary {
+  color: var(--text-primary) !important;
+  font-weight: 500 !important;
 } 

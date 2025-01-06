@@ -17,6 +17,15 @@
   padding: 0;
 }
 
+/* Reset default margins and set full height */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--background-dark);
+}
+
 body {
   background-color: var(--background-dark);
   color: var(--text-primary);
@@ -30,12 +39,18 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  width: 100%;
+  background-color: var(--background-dark);
 }
 
 /* Основной контент */
 .main-content {
   flex: 1;
-  padding: var(--spacing-lg);
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background-color: var(--background-dark);
 }
 
 /* Сетка */

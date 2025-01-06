@@ -1,120 +1,63 @@
-import axios from 'axios';
-import { API_BASE_URL, ENDPOINTS } from './config';
-import { useState, useEffect } from 'react';
-
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Добавим перехватчик для логирования запросов
-api.interceptors.request.use(request => {
-  console.log('Starting Request:', request);
-  return request;
-});
-
-api.interceptors.response.use(
-  response => {
-    console.log('Response:', response);
-    return response;
-  },
-  error => {
-    console.error('Error Response:', error.response?.data);
-    return Promise.reject(error);
-  }
-);
+import api from './api';
+import { ENDPOINTS } from './config';
 
 export const authService = {
-  login: async (credentials) => {
+  async register(userData) {
     try {
-      const response = await api.post(ENDPOINTS.LOGIN, {
-        username: credentials.username,
-        password: credentials.password
-      });
-
-      console.log('Login response:', response.data);
-
-      if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
-        api.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
-      }
-
-      return {
-        token: response.data.token,
-        user: {
-          username: credentials.username
-        }
-      };
+      const response = await api.post(ENDPOINTS.REGISTER, userData);
+      this.setTokens(response.data);
+      return response;
     } catch (error) {
-      console.error('Login error:', error.response?.data);
-      throw new Error(error.response?.data?.detail || 'Login failed');
+      throw this.handleError(error);
     }
   },
 
-  register: async (userData) => {
+  async login(credentials) {
     try {
-      const response = await api.post(ENDPOINTS.REGISTER, {
-        username: userData.username,
-        email: userData.email,
-        password: userData.password
-      });
-
-      if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('refresh', response.data.refresh);
-      }
-
-      return response.data;
+      const response = await api.post(ENDPOINTS.LOGIN, credentials);
+      this.setTokens(response.data);
+      return response;
     } catch (error) {
-      const errorMessage = error.response?.data?.detail || 'Registration failed';
-      console.error('Registration error:', error.response?.data);
-      throw new Error(errorMessage);
+      throw this.handleError(error);
     }
   },
 
-  refreshToken: async () => {
+  async refreshToken() {
     try {
-      const refresh = localStorage.getItem('refresh_token');
+      const refresh = localStorage.getItem('refresh');
+      if (!refresh) throw new Error('No refresh token available');
+
       const response = await api.post(ENDPOINTS.TOKEN_REFRESH, {
         refresh
       });
-      if (response.data.access) {
-        localStorage.setItem('token', response.data.access);
-        api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
-      }
-      return response.data;
+      
+      localStorage.setItem('token', response.data.access);
+      return response.data.access;
     } catch (error) {
-      console.error('Token refresh error:', error);
-      throw error;
+      this.logout();
+      throw this.handleError(error);
     }
-  }
-};
+  },
 
-export const useAuth = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setIsAuthenticated(true);
-      // Можно добавить проверку токена здесь
-    }
-  }, []);
-
-  const login = (userData) => {
-    setIsAuthenticated(true);
-    setUser(userData);
-  };
-
-  const logout = () => {
+  logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('refresh');
-    setIsAuthenticated(false);
-    setUser(null);
-  };
+    window.location.href = '/login';
+  },
 
-  return { isAuthenticated, user, login, logout };
+  setTokens(data) {
+    if (data.token) localStorage.setItem('token', data.token);
+    if (data.refresh) localStorage.setItem('refresh', data.refresh);
+  },
+
+  handleError(error) {
+    if (error.response?.status === 401) {
+      this.logout();
+    }
+    return error;
+  },
+
+  isAuthenticated() {
+    return !!localStorage.getItem('token');
+  }
 }; 

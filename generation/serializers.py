@@ -26,8 +26,9 @@ class ImageGenerationRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageGenerationRequest
         fields = [
-            'prompt', 'created_at', 'generated_image',
-            'guidance_scale'
+            'id', 'prompt', 'model', 'style', 'n_steps', 
+            'guidance_scale', 'seed', 'generated_image', 
+            'thumbnail', 'created_at'
         ]
         read_only_fields = ['created_at', 'generated_image']  # Указываем поля, которые нельзя менять
 

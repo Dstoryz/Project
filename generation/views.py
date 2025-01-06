@@ -23,9 +23,31 @@ class HistoryView(APIView):
         """
         Возвращает историю запросов текущего пользователя.
         """
-        history = ImageGenerationRequest.objects.filter(user=request.user).order_by('-created_at')
-        serializer = ImageGenerationRequestSerializer(history, many=True)
-        return Response(serializer.data)
+        try:
+            history = ImageGenerationRequest.objects.filter(
+                user=request.user
+            ).order_by('-created_at')
+            
+            serializer = ImageGenerationRequestSerializer(history, many=True)
+            print("History data:", serializer.data)  # Добавим для отладки
+            return Response(serializer.data)
+        except Exception as e:
+            print("Error fetching history:", str(e))  # Добавим для отладки
+            return Response(
+                {"error": "Failed to fetch history"}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def delete(self, request, pk=None):
+        """
+        Удаляет запись из истории.
+        """
+        try:
+            item = ImageGenerationRequest.objects.get(id=pk, user=request.user)
+            item.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except ImageGenerationRequest.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 def process_prompt(prompt, style=None, color_scheme=None):

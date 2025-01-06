@@ -1,93 +1,93 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Paper, 
   Typography, 
-  Divider, 
   FormControl, 
   InputLabel, 
   Select, 
   MenuItem,
   Slider,
-  Box 
+  Box,
+  TextField,
+  Tooltip,
+  IconButton,
+  InputAdornment,
+  Snackbar,
+  Alert
 } from '@mui/material';
+import { STYLE_OPTIONS, MODEL_OPTIONS } from '../constants';
+import InfoIcon from '@mui/icons-material/Info';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import './Settings.css';
 
-// Настройки из backend (models_config.py)
-const MODEL_OPTIONS = [
-  { 
-    value: 'stable-diffusion-v1-5', 
-    label: 'V1 - Анимационные, мультяшные изображения',
-    details: 'Стабильная версия для создания мультяшных изображений'
-  },
-  { 
-    value: 'stable-diffusion-2-1', 
-    label: 'V2 - Кинематографические сценарии',
-    details: 'Улучшенная версия для реалистичных изображений'
-  },
-  { 
-    value: 'openjourney-v4', 
-    label: 'V4 - Универсальная модель',
-    details: 'Современная версия для разнообразных стилей'
-  }
-];
+function Settings({ formData, onChange }) {
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'success' });
 
-const STYLE_OPTIONS = [
-  { value: 'none', label: 'Без стиля' },
-  { value: 'cartoon', label: 'Мультяшный' },
-  { value: 'realistic', label: 'Реализм' },
-  { value: 'anime', label: 'Аниме' },
-  { value: 'cyberpunk', label: 'Киберпанк' },
-  { value: 'steampunk', label: 'Стимпанк' },
-  { value: 'portrait', label: 'Портретный' },
-  { value: 'dark', label: 'Тёмный' },
-  { value: 'cinematic', label: 'Кинематографичный' }
-];
+  const handleSliderChange = (name) => (event, newValue) => {
+    onChange({ target: { name, value: newValue } });
+  };
 
-const IMAGE_SIZES = [
-  { value: '768x896', label: '768x896' },
-  { value: '768x1024', label: '768x1024' },
-  { value: '896x768', label: '896x768' },
-  { value: '1024x1024', label: '1024x1024' }
-];
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    onChange({ target: { name, value } });
+  };
 
-function Settings({ formData, onChange, error }) {
+  const handleCopySeed = async () => {
+    try {
+      await navigator.clipboard.writeText(formData.seed);
+      setNotification({
+        open: true,
+        message: 'Seed скопирован в буфер обмена',
+        severity: 'success'
+      });
+    } catch (err) {
+      setNotification({
+        open: true,
+        message: 'Не удалось скопировать seed',
+        severity: 'error'
+      });
+    }
+  };
+
+  const generateRandomSeed = () => {
+    const newSeed = Math.floor(Math.random() * 1000000);
+    onChange({ target: { name: 'seed', value: newSeed } });
+  };
+
+  const handleCloseNotification = () => {
+    setNotification({ ...notification, open: false });
+  };
+
   return (
-    <Paper className="settings-panel">
-      <Typography variant="h6" gutterBottom>
-        Настройки генерации
+    <Paper className="settings-panel" elevation={0}>
+      <Typography variant="h6" className="settings-title">
+        Generation Settings
       </Typography>
-      <Divider sx={{ mb: 2 }} />
 
-      {/* Выбор модели */}
-      <FormControl className="settings-form-control" fullWidth>
-        <InputLabel>Модель</InputLabel>
+      <FormControl fullWidth className="settings-control">
+        <InputLabel>Model</InputLabel>
         <Select
           name="model"
           value={formData.model}
           onChange={onChange}
-          label="Модель"
+          label="Model"
         >
           {MODEL_OPTIONS.map(option => (
             <MenuItem key={option.value} value={option.value}>
-              <Box>
-                <Typography variant="subtitle1">{option.label}</Typography>
-                <Typography variant="caption" color="text.secondary">
-                  {option.details}
-                </Typography>
-              </Box>
+              {option.label}
             </MenuItem>
           ))}
         </Select>
       </FormControl>
 
-      {/* Выбор стиля */}
-      <FormControl className="settings-form-control" fullWidth>
-        <InputLabel>Стиль</InputLabel>
+      <FormControl fullWidth className="settings-control">
+        <InputLabel>Style</InputLabel>
         <Select
           name="style"
           value={formData.style}
           onChange={onChange}
-          label="Стиль"
+          label="Style"
         >
           {STYLE_OPTIONS.map(option => (
             <MenuItem key={option.value} value={option.value}>
@@ -97,37 +97,17 @@ function Settings({ formData, onChange, error }) {
         </Select>
       </FormControl>
 
-      {/* Размер изображения */}
-      <FormControl className="settings-form-control" fullWidth>
-        <InputLabel>Размер изображения</InputLabel>
-        <Select
-          name="size"
-          value={formData.size}
-          onChange={onChange}
-          label="Размер изображения"
-        >
-          {IMAGE_SIZES.map(option => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-
-      {/* Количество шагов */}
-      <Box className="settings-slider-container">
+      <Box className="settings-slider">
         <Typography gutterBottom>
-          Количество шагов: {formData.n_steps}
+          Steps: {formData.n_steps}
         </Typography>
         <Slider
-          name="n_steps"
           value={formData.n_steps}
-          onChange={onChange}
-          min={20}
+          onChange={handleSliderChange('n_steps')}
+          min={50}
           max={150}
           step={1}
           marks={[
-            { value: 20, label: '20' },
             { value: 50, label: '50' },
             { value: 100, label: '100' },
             { value: 150, label: '150' }
@@ -135,11 +115,83 @@ function Settings({ formData, onChange, error }) {
         />
       </Box>
 
-      {error && (
-        <Typography className="settings-error">
-          {error}
+      <Box className="settings-slider">
+        <Typography gutterBottom>
+          Guidance Scale: {formData.guidance_scale}
         </Typography>
-      )}
+        <Slider
+          value={formData.guidance_scale}
+          onChange={handleSliderChange('guidance_scale')}
+          min={1}
+          max={20}
+          step={0.1}
+          marks={[
+            { value: 1, label: '1' },
+            { value: 10, label: '10' },
+            { value: 20, label: '20' }
+          ]}
+        />
+      </Box>
+
+      <Box className="settings-group">
+        <Typography variant="subtitle2" className="settings-subtitle">
+          Seed
+          <Tooltip title="Seed определяет начальное состояние генерации. Одинаковый seed и промпт дадут похожий результат">
+            <IconButton size="small">
+              <InfoIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Typography>
+        <TextField
+          fullWidth
+          name="seed"
+          type="number"
+          value={formData.seed || ''}
+          onChange={handleChange}
+          size="small"
+          placeholder="Случайное значение"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <Tooltip title="Сгенерировать случайный seed">
+                  <IconButton
+                    onClick={generateRandomSeed}
+                    edge="end"
+                    size="small"
+                  >
+                    <RefreshIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Скопировать seed">
+                  <IconButton
+                    onClick={handleCopySeed}
+                    edge="end"
+                    size="small"
+                    disabled={!formData.seed}
+                  >
+                    <ContentCopyIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Box>
+
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={3000}
+        onClose={handleCloseNotification}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert 
+          onClose={handleCloseNotification} 
+          severity={notification.severity}
+          variant="filled"
+        >
+          {notification.message}
+        </Alert>
+      </Snackbar>
     </Paper>
   );
 }

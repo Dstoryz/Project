@@ -1,0 +1,32 @@
+.tab-panel-container {
+  margin-bottom: var(--spacing-lg);
+}
+
+.tab-panel {
+  background-color: var(--background-light) !important;
+  border-radius: var(--radius-lg) !important;
+}
+
+.tab-item {
+  min-height: 56px !important;
+  padding: var(--spacing-md) var(--spacing-lg) !important;
+  color: var(--text-secondary) !important;
+  text-transform: none !important;
+  font-weight: 500 !important;
+}
+
+.tab-item.Mui-selected {
+  color: var(--primary-color) !important;
+}
+
+.MuiTabs-indicator {
+  background-color: var(--primary-color) !important;
+}
+
+.MuiTabScrollButton-root {
+  color: var(--text-secondary) !important;
+}
+
+.MuiTabScrollButton-root.Mui-disabled {
+  opacity: 0.3;
+} 

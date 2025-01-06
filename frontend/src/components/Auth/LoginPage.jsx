@@ -1,8 +1,19 @@
 import React, { useState } from 'react';
-import { Box, Button, TextField, Typography, Container, Alert, Snackbar } from '@mui/material';
+import { 
+  Box, 
+  Button, 
+  TextField, 
+  Typography, 
+  Paper,
+  Alert,
+  IconButton,
+  InputAdornment
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { authService } from '../../api/authService';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useAuth } from '../../hooks/useAuth';
+import { authService } from '../../api/authService';
+import './Auth.css';
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -11,106 +22,102 @@ function LoginPage() {
     username: '',
     password: ''
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
+    setFormData(prev => ({
+      ...prev,
       [name]: value
     }));
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
     setError('');
-    
+
     try {
       const response = await authService.login(formData);
-      console.log('Login response:', response);
-      
-      login(response.user || { username: formData.username });
-      
-      setShowSuccess(true);
-      
-      setTimeout(() => {
-        navigate('/');
-      }, 1500);
-    } catch (error) {
-      setError(error.message || 'Login failed');
+      login(response.data);
+      navigate('/');
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Login failed');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Typography component="h1" variant="h5">
-          Sign in
+    <Box className="auth-container">
+      <Paper className="auth-form" elevation={3}>
+        <Typography variant="h5" className="auth-title">
+          Welcome Back
         </Typography>
+        
         {error && (
-          <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
+          <Alert severity="error" className="auth-alert">
             {error}
           </Alert>
         )}
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+
+        <form onSubmit={handleSubmit}>
           <TextField
-            margin="normal"
-            required
             fullWidth
-            id="username"
             label="Username"
             name="username"
-            autoComplete="username"
-            autoFocus
             value={formData.username}
             onChange={handleChange}
-          />
-          <TextField
-            margin="normal"
+            className="auth-input"
             required
+          />
+
+          <TextField
             fullWidth
-            name="password"
             label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
+            name="password"
+            type={showPassword ? 'text' : 'password'}
             value={formData.password}
             onChange={handleChange}
+            className="auth-input"
+            required
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
+
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            disabled={loading}
+            className="auth-button"
           >
-            Sign In
+            {loading ? 'Signing in...' : 'Sign In'}
           </Button>
+
           <Button
             fullWidth
             variant="text"
             onClick={() => navigate('/register')}
+            className="auth-link"
           >
             Don't have an account? Sign Up
           </Button>
-        </Box>
-      </Box>
-      
-      <Snackbar
-        open={showSuccess}
-        autoHideDuration={1500}
-        onClose={() => setShowSuccess(false)}
-        message="Login successful!"
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      />
-    </Container>
+        </form>
+      </Paper>
+    </Box>
   );
 }
 

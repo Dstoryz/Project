@@ -1,133 +1,152 @@
 import React, { useState } from 'react';
-import { Box, Button, TextField, Typography, Container, Alert } from '@mui/material';
+import { 
+  Box, 
+  Button, 
+  TextField, 
+  Typography, 
+  Paper,
+  Alert,
+  IconButton,
+  InputAdornment 
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { useAuth } from '../../hooks/useAuth';
 import { authService } from '../../api/authService';
+import { useForm } from '../../hooks/useForm';
+import './Auth.css';
 
 function RegisterPage() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+  const { login } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+
+  const {
+    values,
+    loading,
+    handleChange,
+    handleSubmit
+  } = useForm({
     username: '',
     email: '',
     password: '',
     confirmPassword: ''
   });
-  const [error, setError] = useState('');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setError('');
-
-    // Проверка совпадения паролей
-    if (formData.password !== formData.confirmPassword) {
+  const onSubmit = async () => {
+    if (values.password !== values.confirmPassword) {
       setError('Passwords do not match');
       return;
     }
 
+    setError('');
     try {
       const response = await authService.register({
-        username: formData.username,
-        email: formData.email,
-        password: formData.password
+        username: values.username,
+        email: values.email,
+        password: values.password
       });
-      console.log('Registration successful:', response);
-      navigate('/login'); // Перенаправляем на страницу логина после успешной регистрации
-    } catch (error) {
-      setError(error.response?.data?.message || 'Registration failed. Please try again.');
+      login(response.data);
+      navigate('/');
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Registration failed');
     }
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Typography component="h1" variant="h5">
-          Sign up
+    <Box className="auth-container">
+      <Paper className="auth-form" elevation={3}>
+        <Typography variant="h5" className="auth-title">
+          Create Account
         </Typography>
+        
         {error && (
-          <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
+          <Alert severity="error" className="auth-alert">
             {error}
           </Alert>
         )}
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+
+        <form onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit(onSubmit);
+        }}>
           <TextField
-            margin="normal"
-            required
             fullWidth
-            id="username"
             label="Username"
             name="username"
-            autoComplete="username"
-            autoFocus
-            value={formData.username}
+            value={values.username}
             onChange={handleChange}
-          />
-          <TextField
-            margin="normal"
+            className="auth-input"
             required
+          />
+
+          <TextField
             fullWidth
-            id="email"
-            label="Email Address"
+            label="Email"
             name="email"
-            autoComplete="email"
-            value={formData.email}
+            type="email"
+            value={values.email}
             onChange={handleChange}
-          />
-          <TextField
-            margin="normal"
+            className="auth-input"
             required
+          />
+
+          <TextField
             fullWidth
-            name="password"
             label="Password"
-            type="password"
-            id="password"
-            autoComplete="new-password"
-            value={formData.password}
+            name="password"
+            type={showPassword ? 'text' : 'password'}
+            value={values.password}
             onChange={handleChange}
-          />
-          <TextField
-            margin="normal"
+            className="auth-input"
             required
-            fullWidth
-            name="confirmPassword"
-            label="Confirm Password"
-            type="password"
-            id="confirmPassword"
-            autoComplete="new-password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
+
+          <TextField
+            fullWidth
+            label="Confirm Password"
+            name="confirmPassword"
+            type={showPassword ? 'text' : 'password'}
+            value={values.confirmPassword}
+            onChange={handleChange}
+            className="auth-input"
+            required
+          />
+
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            disabled={loading}
+            className="auth-button"
           >
-            Sign Up
+            {loading ? 'Creating Account...' : 'Sign Up'}
           </Button>
+
           <Button
             fullWidth
             variant="text"
             onClick={() => navigate('/login')}
+            className="auth-link"
           >
             Already have an account? Sign In
           </Button>
-        </Box>
-      </Box>
-    </Container>
+        </form>
+      </Paper>
+    </Box>
   );
 }
 

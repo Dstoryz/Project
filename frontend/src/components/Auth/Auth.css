@@ -1,0 +1,54 @@
+.auth-container {
+  min-height: calc(100vh - var(--header-height));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  background-color: var(--background-dark);
+}
+
+.auth-form {
+  width: 100%;
+  max-width: 400px;
+  padding: var(--spacing-xl);
+  background-color: var(--background-light) !important;
+  border-radius: var(--radius-lg) !important;
+}
+
+.auth-title {
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xl) !important;
+  text-align: center;
+}
+
+.auth-input {
+  margin-bottom: var(--spacing-lg) !important;
+}
+
+.auth-input .MuiOutlinedInput-root {
+  background-color: var(--surface-dark);
+}
+
+.auth-button {
+  margin: var(--spacing-lg) 0 !important;
+  height: 48px;
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)) !important;
+  font-weight: 600 !important;
+}
+
+.auth-button:hover {
+  background: linear-gradient(45deg, var(--primary-dark), var(--secondary-color)) !important;
+}
+
+.auth-link {
+  color: var(--text-secondary) !important;
+}
+
+.auth-alert {
+  margin-bottom: var(--spacing-lg) !important;
+}
+
+.auth-divider {
+  margin: var(--spacing-lg) 0 !important;
+  color: var(--text-secondary) !important;
+} 

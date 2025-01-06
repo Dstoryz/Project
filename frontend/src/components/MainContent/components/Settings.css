@@ -1,21 +1,85 @@
 .settings-panel {
-  padding: 20px;
+  padding: var(--spacing-lg);
+  background-color: var(--background-light) !important;
+  height: 100%;
 }
 
-.settings-form-control {
-  margin-bottom: 24px;
+.settings-title {
+  margin-bottom: var(--spacing-xl) !important;
+  color: var(--text-primary);
 }
 
-.settings-slider-container {
-  margin-bottom: 24px;
+.settings-control {
+  margin-bottom: var(--spacing-lg) !important;
 }
 
-.settings-model-item {
+.settings-slider {
+  margin-top: var(--spacing-xl);
+}
+
+.settings-slider .MuiSlider-root {
+  color: var(--primary-color);
+}
+
+.settings-slider .MuiSlider-markLabel {
+  color: var(--text-secondary);
+}
+
+.settings-slider .MuiSlider-valueLabel {
+  background-color: var(--primary-color);
+}
+
+.settings-control .MuiOutlinedInput-root {
+  background-color: var(--surface-dark);
+}
+
+.settings-control .MuiInputLabel-root {
+  color: var(--text-secondary);
+}
+
+.settings-control .MuiSelect-select {
+  color: var(--text-primary);
+}
+
+.settings-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.settings-subtitle {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-xs);
 }
 
-.settings-error {
-  margin-top: 16px;
-  color: #f44336;
+.MuiTooltip-tooltip {
+  font-size: 0.75rem;
+  max-width: 220px;
+}
+
+/* Добавляем стили для поля seed */
+.settings-panel .MuiInputBase-root {
+  padding-right: 4px;
+}
+
+.settings-panel .MuiInputAdornment-root {
+  margin-left: 0;
+}
+
+.settings-panel .MuiInputAdornment-root .MuiIconButton-root {
+  padding: 4px;
+}
+
+/* Анимация для кнопок */
+.settings-panel .MuiIconButton-root {
+  transition: transform 0.2s ease;
+}
+
+.settings-panel .MuiIconButton-root:hover {
+  transform: scale(1.1);
+}
+
+/* Стили для уведомлений */
+.settings-panel .MuiAlert-filled {
+  border-radius: var(--radius-md);
 } 
