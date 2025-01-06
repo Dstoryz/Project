@@ -13,60 +13,39 @@ import torch
 from .models import ImageGenerationRequest
 from .serializers import ImageGenerationRequestSerializer
 from .models_config import MODEL_CONFIG  # Импорт конфигурации
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
+from django.http import JsonResponse
+from django.views import View
+from django.utils.decorators import method_decorator
+from django.contrib.auth import authenticate, login
 
 logger = logging.getLogger(__name__)
 
-class HistoryView(APIView):
-    permission_classes = [IsAuthenticated]
-
+# Добавляем класс GetCSRFToken
+@method_decorator(ensure_csrf_cookie, name='dispatch')
+class GetCSRFToken(View):
     def get(self, request):
-        """
-        Возвращает историю запросов текущего пользователя.
-        """
-        try:
-            history = ImageGenerationRequest.objects.filter(
-                user=request.user
-            ).order_by('-created_at')
-            
-            serializer = ImageGenerationRequestSerializer(history, many=True)
-            print("History data:", serializer.data)  # Добавим для отладки
-            return Response(serializer.data)
-        except Exception as e:
-            print("Error fetching history:", str(e))  # Добавим для отладки
+        return JsonResponse({'detail': 'CSRF cookie set'})
+
+@method_decorator(ensure_csrf_cookie, name='dispatch')
+class LoginView(APIView):
+    permission_classes = []
+
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(username=username, password=password)
+        
+        if user is not None:
+            login(request, user)
+            return Response({'detail': 'Successfully logged in'})
+        else:
             return Response(
-                {"error": "Failed to fetch history"}, 
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                {'detail': 'Invalid credentials'}, 
+                status=status.HTTP_401_UNAUTHORIZED
             )
 
-    def delete(self, request, pk=None):
-        """
-        Удаляет запись из истории.
-        """
-        try:
-            item = ImageGenerationRequest.objects.get(id=pk, user=request.user)
-            item.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except ImageGenerationRequest.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-def process_prompt(prompt, style=None, color_scheme=None):
-    """
-    Обрабатывает пользовательский промпт на основе переданных параметров,
-    добавляя настройки в конец промпта через запятую.
-    """
-    settings = []
-    if style:
-        settings.append(f"{style.capitalize()} style")
-    if color_scheme == 'vibrant':
-        settings.append("vibrant color scheme")
-    elif color_scheme == 'monochrome':
-        settings.append("monochrome color scheme")
-    elif color_scheme == 'pastel':
-        settings.append("pastel colors")
-    return f"{prompt}, {', '.join(settings)}" if settings else prompt
-
-
+@method_decorator(csrf_exempt, name='dispatch')
 class ImageGenerationRequestView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -167,3 +146,52 @@ class ImageGenerationRequestView(APIView):
         image.save(image_io, format="PNG")
         image_io.seek(0)
         return image_io
+
+@method_decorator(ensure_csrf_cookie, name='dispatch')
+class HistoryView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            logger.info(f"Fetching history for user: {request.user.username}")
+            history = ImageGenerationRequest.objects.filter(
+                user=request.user
+            ).order_by('-created_at')
+            
+            serializer = ImageGenerationRequestSerializer(history, many=True)
+            logger.info(f"Successfully fetched {len(history)} history items")
+            return Response(serializer.data)
+        except Exception as e:
+            logger.error(f"Error fetching history: {str(e)}")
+            return Response(
+                {"error": str(e)}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def delete(self, request, pk=None):
+        """
+        Удаляет запись из истории.
+        """
+        try:
+            item = ImageGenerationRequest.objects.get(id=pk, user=request.user)
+            item.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except ImageGenerationRequest.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+def process_prompt(prompt, style=None, color_scheme=None):
+    """
+    Обрабатывает пользовательский промпт на основе переданных параметров,
+    добавляя настройки в конец промпта через запятую.
+    """
+    settings = []
+    if style:
+        settings.append(f"{style.capitalize()} style")
+    if color_scheme == 'vibrant':
+        settings.append("vibrant color scheme")
+    elif color_scheme == 'monochrome':
+        settings.append("monochrome color scheme")
+    elif color_scheme == 'pastel':
+        settings.append("pastel colors")
+    return f"{prompt}, {', '.join(settings)}" if settings else prompt

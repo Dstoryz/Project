@@ -3,7 +3,12 @@
 /* Базовые переменные */
 :root {
   --primary-bg-color: #1a1a1a;
+  background-color: #1a1a1a; /* Fallback */
+  background-color: var(--primary-bg-color);
+  
   --primary-text-color: white;
+  color: white; /* Fallback */
+  color: var(--primary-text-color);
   --accent-color: #2196f3;
   --panel-width: 300px;
   --header-height: 64px;
@@ -27,7 +32,6 @@ html, body, #root {
 }
 
 body {
-  background-color: var(--background-dark);
   color: var(--text-primary);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -41,6 +45,8 @@ body {
   min-height: 100vh;
   width: 100%;
   background-color: var(--background-dark);
+  position: relative;
+  z-index: 1;
 }
 
 /* Основной контент */
@@ -51,15 +57,18 @@ body {
   padding: 0 !important;
   margin: 0 !important;
   background-color: var(--background-dark);
+  position: relative;
+  z-index: 2;
 }
 
 /* Сетка */
 .grid-container {
   display: grid;
-  grid-template-columns: var(--sidebar-width) 1fr;
+  grid-template-columns: var(--sidebar-width) minmax(auto, var(--content-max-width));
   gap: var(--spacing-lg);
-  max-width: var(--content-max-width);
   margin: 0 auto;
+  height: 100%;
+  position: relative;
 }
 
 /* Общие компоненты */
@@ -68,10 +77,13 @@ body {
   border-radius: var(--radius-md);
   padding: var(--spacing-lg);
   box-shadow: var(--shadow-md);
+  -webkit-transition: transform var(--transition-normal);
+  -moz-transition: transform var(--transition-normal);
   transition: transform var(--transition-normal);
 }
 
 .card:hover {
+  will-change: transform;
   transform: translateY(-2px);
 }
 
@@ -84,6 +96,8 @@ body {
   padding: var(--spacing-sm) var(--spacing-lg);
   cursor: pointer;
   transition: background-color var(--transition-fast);
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .button:hover {
@@ -99,6 +113,9 @@ body {
   padding: var(--spacing-sm);
   width: 100%;
   transition: border-color var(--transition-fast);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 .input-field:focus {
@@ -112,7 +129,25 @@ body {
     grid-template-columns: 1fr;
   }
   
-  .sidebar {
+  .sidebar,
+  .left-panel {
     display: none;
+  }
+  
+  .main-content {
+    padding: var(--spacing-md) !important;
+  }
+}
+
+@media print {
+  .button,
+  .sidebar,
+  .input-field {
+    display: none !important;
+  }
+  
+  body {
+    background: white;
+    color: black;
   }
 }

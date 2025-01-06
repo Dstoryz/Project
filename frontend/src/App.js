@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
@@ -9,8 +9,14 @@ import MainContent from './components/MainContent/MainContent';
 import { AuthProvider } from './contexts/AuthContext';
 import { theme } from './theme/theme';
 import './styles/global.css';
+import ProtectedRoute from './components/ProtectedRoute';
+import { generationService } from './api/generationService';
 
 function App() {
+  useEffect(() => {
+    generationService.initializeCSRF();
+  }, []);
+
   return (
     <AuthProvider>
       <ThemeProvider theme={theme}>
@@ -19,7 +25,11 @@ function App() {
           <Header />
           <main className="main-content">
             <Routes>
-              <Route path="/" element={<MainContent />} />
+              <Route path="/" element={
+                <ProtectedRoute>
+                  <MainContent />
+                </ProtectedRoute>
+              } />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
             </Routes>

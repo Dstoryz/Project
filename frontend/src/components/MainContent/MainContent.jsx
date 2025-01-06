@@ -4,7 +4,6 @@ import TabPanel from './components/TabPanel';
 import ImageDisplay from './components/ImageDisplay';
 import PromptForm from './components/PromptForm';
 import Settings from './components/Settings';
-import LeftPanel from './components/LeftPanel';
 import { useAuth } from '../../hooks/useAuth';
 import { generationService } from '../../api/generationService';
 import './MainContent.css';
@@ -15,6 +14,7 @@ function MainContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [generatedImage, setGeneratedImage] = useState(null);
+  const [lastGeneratedImage, setLastGeneratedImage] = useState(null);
   const { isAuthenticated } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -58,6 +58,7 @@ function MainContent() {
       
       if (result.generated_image) {
         setGeneratedImage(result.generated_image);
+        setLastGeneratedImage(result);
         if (!formData.seed) {
           setFormData(prev => ({
             ...prev,
@@ -152,6 +153,7 @@ function MainContent() {
           <HistoryPanel 
             onRestorePrompt={handleRestorePrompt}
             onImageSelect={handleImageSelect}
+            lastGeneratedImage={lastGeneratedImage}
           />
         </Paper>
 

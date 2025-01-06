@@ -14,11 +14,10 @@ export const generationService = {
   async getHistory() {
     try {
       const response = await api.get(ENDPOINTS.HISTORY);
-      console.log('History response:', response.data);
       return response.data;
     } catch (error) {
       console.error('Error fetching history:', error);
-      throw error;
+      throw new Error(error.response?.data?.error || 'Failed to fetch history');
     }
   },
 
@@ -27,6 +26,14 @@ export const generationService = {
       await api.delete(`${ENDPOINTS.HISTORY}${id}/`);
     } catch (error) {
       throw error;
+    }
+  },
+
+  async initializeCSRF() {
+    try {
+      await api.get('/api/csrf/');
+    } catch (error) {
+      console.error('Failed to get CSRF token:', error);
     }
   }
 }; 

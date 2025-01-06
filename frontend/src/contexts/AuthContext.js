@@ -1,23 +1,22 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { authService } from '../api/authService';
 
-const AuthContext = createContext(null);
+export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const initAuth = async () => {
-      const token = localStorage.getItem('token');
+      const token = authService.getToken();
       if (token) {
         try {
           await authService.refreshToken();
           setIsAuthenticated(true);
         } catch (err) {
           console.error('Auth initialization failed:', err);
+          setIsAuthenticated(false);
         }
       }
       setLoading(false);
@@ -26,42 +25,38 @@ export const AuthProvider = ({ children }) => {
     initAuth();
   }, []);
 
-  const login = async (userData) => {
-    setError(null);
+  const login = async (credentials) => {
+    console.log('AuthContext: Starting login process...');
     try {
+      const data = await authService.login(credentials);
+      console.log('AuthContext: Login successful, setting authenticated state');
       setIsAuthenticated(true);
-      setUser(userData.user);
-    } catch (err) {
-      setError(err.message);
-      throw err;
+      return data;
+    } catch (error) {
+      console.error('AuthContext: Login failed:', error);
+      setIsAuthenticated(false);
+      throw error;
     }
   };
 
-  const logout = async () => {
-    try {
-      await authService.logout();
-      setIsAuthenticated(false);
-      setUser(null);
-    } catch (err) {
-      console.error('Logout failed:', err);
-    }
+  const logout = () => {
+    authService.logout();
+    setIsAuthenticated(false);
   };
 
   if (loading) {
-    return <div>Loading...</div>; // Можно заменить на компонент загрузки
+    return <div>Loading...</div>;
   }
 
+  const value = {
+    isAuthenticated,
+    login,
+    logout,
+    loading
+  };
+
   return (
-    <AuthContext.Provider 
-      value={{ 
-        isAuthenticated, 
-        user, 
-        login, 
-        logout,
-        error,
-        loading 
-      }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

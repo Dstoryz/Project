@@ -12,7 +12,6 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useAuth } from '../../hooks/useAuth';
-import { authService } from '../../api/authService';
 import './Auth.css';
 
 function LoginPage() {
@@ -39,12 +38,16 @@ function LoginPage() {
     setLoading(true);
     setError('');
 
+    console.log('Login attempt:', { username: formData.username });
+
     try {
-      const response = await authService.login(formData);
-      login(response.data);
-      navigate('/');
+      console.log('Calling login function...');
+      await login(formData);
+      console.log('Login successful, navigating to home...');
+      navigate('/', { replace: true });
     } catch (err) {
-      setError(err.response?.data?.detail || 'Login failed');
+      console.error('Login error:', err);
+      setError(err.message || 'Failed to login');
     } finally {
       setLoading(false);
     }
