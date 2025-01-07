@@ -29,10 +29,9 @@ export const authService = {
       const refresh = localStorage.getItem('refresh');
       if (!refresh) throw new Error('No refresh token');
 
-      const response = await api.post('/api/token/refresh/', { refresh });
+      const response = await api.post(ENDPOINTS.REFRESH, { refresh });
       const { access } = response.data;
       
-      // Обновляем токен в localStorage и заголовках
       localStorage.setItem('token', access);
       api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
       
@@ -44,14 +43,9 @@ export const authService = {
   },
 
   logout() {
-    // Очищаем токены
     localStorage.removeItem('token');
     localStorage.removeItem('refresh');
     delete api.defaults.headers.common['Authorization'];
-  },
-
-  isAuthenticated() {
-    return !!localStorage.getItem('token');
   },
 
   getToken() {

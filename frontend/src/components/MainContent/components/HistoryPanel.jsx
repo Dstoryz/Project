@@ -39,11 +39,21 @@ function HistoryPanel({ onImageSelect, newGeneration }) {
     onImageSelect({
       generated_image: item.generated_image,
       prompt: item.prompt,
-      model: item.model,
-      style: item.style,
-      n_steps: item.n_steps,
-      guidance_scale: item.guidance_scale,
-      seed: item.seed
+      original_prompt: item.original_prompt,
+      model: item.model || 'stable-diffusion-v1-5',
+      style: item.style || 'none',
+      n_steps: parseInt(item.n_steps) || 50,
+      guidance_scale: parseFloat(item.guidance_scale) || 7.5,
+      seed: item.seed !== null ? item.seed.toString() : '',
+      width: parseInt(item.width) || 512,
+      height: parseInt(item.height) || 512,
+      negative_prompt: item.negative_prompt || '',
+      sampler: item.sampler || 'DPM++ 2M Karras',
+      clip_skip: parseInt(item.clip_skip) || 1,
+      tiling: Boolean(item.tiling),
+      hires_fix: Boolean(item.hires_fix),
+      denoising_strength: parseFloat(item.denoising_strength) || 0.7,
+      safety_checker: item.safety_checker !== false
     });
   };
 
@@ -78,10 +88,20 @@ function HistoryPanel({ onImageSelect, newGeneration }) {
               alt={item.prompt}
               className="history-image"
             />
-            <Typography className="history-prompt">{item.prompt}</Typography>
-            <Typography className="history-timestamp">
-              {new Date(item.created_at).toLocaleString()}
+            <Typography className="history-prompt">
+              {item.original_prompt}
             </Typography>
+            <Typography className="history-prompt-translated" variant="caption">
+              EN: {item.prompt}
+            </Typography>
+            <Box className="history-details">
+              <Typography className="history-timestamp">
+                {new Date(item.created_at).toLocaleString()}
+              </Typography>
+              <Typography className="history-seed" variant="caption">
+                Seed: {item.seed || 'Random'}
+              </Typography>
+            </Box>
           </Box>
         ))}
       </Box>

@@ -67,4 +67,27 @@
 
 .error-message {
   color: var(--error-color);
+}
+
+.history-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-sm);
+  margin-top: var(--spacing-xs);
+}
+
+.history-seed {
+  color: var(--text-secondary);
+  font-family: monospace;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.history-timestamp {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
 } 

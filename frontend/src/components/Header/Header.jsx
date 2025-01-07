@@ -54,6 +54,13 @@ function Header() {
               </Button>
             </>
           )}
+          <Button
+            color="inherit"
+            onClick={() => navigate('/terms')}
+            sx={{ marginLeft: 2 }}
+          >
+            Пользовательское соглашение
+          </Button>
         </Box>
       </Toolbar>
     </AppBar>

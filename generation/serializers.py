@@ -7,12 +7,13 @@ logger = logging.getLogger(__name__)
 
 class ImageGenerationRequestSerializer(serializers.ModelSerializer):
     generated_image = serializers.ImageField(read_only=True)
+    original_prompt = serializers.CharField(read_only=True)
 
     class Meta:
         model = ImageGenerationRequest
         fields = [
-            'id', 'prompt', 'model', 'style', 'n_steps', 
-            'guidance_scale', 'seed', 'generated_image', 
+            'id', 'original_prompt', 'prompt', 'model', 'style', 
+            'n_steps', 'guidance_scale', 'seed', 'generated_image', 
             'thumbnail', 'created_at'
         ]
         read_only_fields = ['created_at', 'generated_image']

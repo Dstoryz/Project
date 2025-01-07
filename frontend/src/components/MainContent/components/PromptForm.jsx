@@ -14,7 +14,7 @@ const PromptForm = forwardRef(({ onSubmit, loading }, ref) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (prompt.trim()) {
-      onSubmit({ prompt: prompt.trim() });
+      onSubmit(prompt.trim());
     }
   };
 

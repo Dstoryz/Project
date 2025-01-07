@@ -11,6 +11,7 @@ import { theme } from './theme/theme';
 import './styles/global.css';
 import ProtectedRoute from './components/ProtectedRoute';
 import { generationService } from './api/generationService';
+import TermsOfService from './components/Legal/TermsOfService';
 
 function App() {
   useEffect(() => {
@@ -43,6 +44,7 @@ function App() {
               } />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/terms" element={<TermsOfService />} />
             </Routes>
           </main>
         </div>

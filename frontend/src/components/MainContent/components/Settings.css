@@ -82,4 +82,31 @@
 /* Стили для уведомлений */
 .settings-panel .MuiAlert-filled {
   border-radius: var(--radius-md);
+}
+
+.settings-content {
+  padding: var(--spacing-md) 0;
+}
+
+.advanced-settings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.advanced-settings .MuiSlider-root {
+  margin-top: var(--spacing-sm);
+}
+
+.advanced-settings .MuiFormControlLabel-root {
+  margin: var(--spacing-xs) 0;
+}
+
+.advanced-settings .MuiTooltip-tooltip {
+  font-size: 0.75rem;
+}
+
+.settings-tabs {
+  margin-bottom: var(--spacing-md);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 } 

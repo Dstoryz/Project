@@ -6,6 +6,8 @@ import PromptForm from './components/PromptForm';
 import Settings from './components/Settings';
 import { generationService } from '../../api/generationService';
 import './MainContent.css';
+import PromptTemplates from './components/PromptTemplates';
+import PromptTemplateDialog from './components/PromptTemplateDialog';
 
 function MainContent() {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -18,6 +20,24 @@ function MainContent() {
     n_steps: 75,
     guidance_scale: 7.5,
     seed: ''
+  });
+  const [templateDialogOpen, setTemplateDialogOpen] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [settings, setSettings] = useState({
+    model: 'stable-diffusion-v1-5',
+    style: 'none',
+    quality_preset: 'normal',
+    n_steps: 50,
+    guidance_scale: 7.5,
+    width: 512,
+    height: 512,
+    negative_prompt: '',
+    sampler: 'DPM++ 2M Karras',
+    clip_skip: 1,
+    tiling: false,
+    hires_fix: false,
+    denoising_strength: 0.7,
+    safety_checker: true,
   });
 
   const promptFormRef = useRef();
@@ -39,11 +59,10 @@ function MainContent() {
     checkAuth();
   }, []);
 
-  const handleSettingsChange = (event) => {
-    const { name, value } = event.target;
-    setFormData(prev => ({
+  const handleSettingsChange = (newSettings) => {
+    setSettings(prev => ({
       ...prev,
-      [name]: value
+      ...newSettings
     }));
   };
 
@@ -53,40 +72,79 @@ function MainContent() {
       : `http://localhost:8000${item.generated_image}`;
 
     setSelectedImage(imageUrl);
-    setFormData({
-      model: item.model || 'stable-diffusion-v1-5',
-      style: item.style || 'none',
-      n_steps: item.n_steps || 75,
-      guidance_scale: item.guidance_scale || 7.5,
-      seed: item.seed || ''
+    
+    setSettings({
+      model: item.model,
+      style: item.style,
+      n_steps: item.n_steps,
+      guidance_scale: item.guidance_scale,
+      seed: item.seed,
+      width: item.width,
+      height: item.height,
+      negative_prompt: item.negative_prompt,
+      sampler: item.sampler,
+      clip_skip: item.clip_skip,
+      tiling: item.tiling,
+      hires_fix: item.hires_fix,
+      denoising_strength: item.denoising_strength,
+      safety_checker: item.safety_checker
     });
 
     if (promptFormRef.current) {
-      promptFormRef.current.setPrompt(item.prompt);
+      promptFormRef.current.setPrompt(item.original_prompt || item.prompt);
     }
   };
 
   const handleGenerate = async (promptData) => {
-    setLoading(true);
-    setError(null);
     try {
-      const requestData = {
-        prompt: promptData.prompt,
-        model: formData.model,
-        style: formData.style,
-        n_steps: parseInt(formData.n_steps),
-        guidance_scale: parseFloat(formData.guidance_scale),
-        seed: formData.seed ? parseInt(formData.seed) : null
-      };
+      setLoading(true);
+      setError(null);
 
-      const result = await generationService.generateImage(requestData);
-      setLastGeneration(result);
-      setSelectedImage(result.generated_image);
-    } catch (err) {
-      console.error('Generation error:', err);
-      setError(err.message);
+      // Убедимся, что prompt - это строка
+      const prompt = typeof promptData === 'string' ? promptData : promptData.prompt;
+
+      const response = await generationService.generateImage({
+        prompt,
+        model: settings.model,
+        style: settings.style,
+        n_steps: parseInt(settings.n_steps),
+        guidance_scale: parseFloat(settings.guidance_scale),
+        seed: settings.seed ? parseInt(settings.seed) : null,
+        width: parseInt(settings.width),
+        height: parseInt(settings.height),
+        negative_prompt: settings.negative_prompt || '',
+        sampler: settings.sampler,
+        clip_skip: parseInt(settings.clip_skip),
+        tiling: Boolean(settings.tiling),
+        hires_fix: Boolean(settings.hires_fix),
+        denoising_strength: parseFloat(settings.denoising_strength),
+        safety_checker: Boolean(settings.safety_checker)
+      });
+
+      setSelectedImage(response.generated_image);
+      setLastGeneration(response);
+    } catch (error) {
+      console.error('Generation error:', error);
+      setError(error.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleTemplateSelect = (template) => {
+    if (promptFormRef.current) {
+      promptFormRef.current.setPrompt(template.prompt);
+    }
+  };
+
+  const handleSaveTemplate = async (templateData) => {
+    try {
+      // TODO: Добавить вызов API для сохранения шаблона
+      console.log('Saving template:', templateData);
+      // После успешного сохранения можно обновить список шаблонов
+      // await loadTemplates();
+    } catch (error) {
+      console.error('Error saving template:', error);
     }
   };
 
@@ -94,6 +152,14 @@ function MainContent() {
     <Box className="main-content">
       <Box className="content-wrapper">
         <Box className="left-panel">
+          <PromptTemplates
+            onSelectTemplate={handleTemplateSelect}
+            onAddTemplate={() => setTemplateDialogOpen(true)}
+            onEditTemplate={(template) => {
+              setSelectedTemplate(template);
+              setTemplateDialogOpen(true);
+            }}
+          />
           <HistoryPanel 
             onImageSelect={handleImageSelect}
             newGeneration={lastGeneration}
@@ -119,10 +185,20 @@ function MainContent() {
 
         <Box className="right-panel">
           <Settings 
-            formData={formData}
-            onChange={handleSettingsChange}
+            settings={settings}
+            onSettingsChange={handleSettingsChange}
           />
         </Box>
+
+        <PromptTemplateDialog
+          open={templateDialogOpen}
+          template={selectedTemplate}
+          onClose={() => {
+            setTemplateDialogOpen(false);
+            setSelectedTemplate(null);
+          }}
+          onSave={handleSaveTemplate}
+        />
       </Box>
     </Box>
   );

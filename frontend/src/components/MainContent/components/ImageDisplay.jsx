@@ -9,14 +9,14 @@ function ImageDisplay({ image, loading, error }) {
     <Paper className="image-display" elevation={0}>
       {loading ? (
         <Box className="image-display-loading">
-          <CircularProgress size={48} />
-          <Typography variant="body1" color="text.secondary">
+          <CircularProgress size={64} />
+          <Typography variant="h6" className="loading-text">
             Генерация изображения может занять несколько минут...
           </Typography>
         </Box>
       ) : error ? (
         <Box className="image-display-error">
-          <Typography color="error">
+          <Typography color="error" variant="h6">
             {error}
           </Typography>
         </Box>
@@ -31,9 +31,12 @@ function ImageDisplay({ image, loading, error }) {
         </Box>
       ) : (
         <Box className="image-display-placeholder">
-          <ImageIcon sx={{ fontSize: 64, color: 'text.disabled' }} />
-          <Typography variant="body1" color="text.secondary">
-            Здесь появится ваше сгенерированное изображение
+          <ImageIcon sx={{ fontSize: 96 }} />
+          <Typography variant="h5" className="placeholder-text">
+            Очень подробно напишите, что вы хотите создать.
+          </Typography>
+          <Typography variant="h6" className="placeholder-subtext">
+            Выберите стиль обработки и версию нейросети
           </Typography>
         </Box>
       )}
