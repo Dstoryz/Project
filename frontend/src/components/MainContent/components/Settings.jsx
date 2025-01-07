@@ -163,14 +163,16 @@ function Settings({ formData, onChange }) {
                   </IconButton>
                 </Tooltip>
                 <Tooltip title="Скопировать seed">
-                  <IconButton
-                    onClick={handleCopySeed}
-                    edge="end"
-                    size="small"
-                    disabled={!formData.seed}
-                  >
-                    <ContentCopyIcon fontSize="small" />
-                  </IconButton>
+                  <span>
+                    <IconButton
+                      onClick={handleCopySeed}
+                      edge="end"
+                      size="small"
+                      disabled={!formData.seed}
+                    >
+                      <ContentCopyIcon fontSize="small" />
+                    </IconButton>
+                  </span>
                 </Tooltip>
               </InputAdornment>
             ),

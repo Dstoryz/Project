@@ -6,7 +6,7 @@ export const STYLE_OPTIONS = [
   { value: 'cartoon', label: 'Cartoon' },
   { value: 'oil-painting', label: 'Oil Painting' },
   { value: 'watercolor', label: 'Watercolor' },
-  { value: 'pixel-art', label: 'Pixel Art' },
+  { value: 'pixel-art', label: 'Pixel Art' }
 ];
 
 export const MODEL_OPTIONS = [

@@ -8,21 +8,6 @@ logger = logging.getLogger(__name__)
 class ImageGenerationRequestSerializer(serializers.ModelSerializer):
     generated_image = serializers.ImageField(read_only=True)
 
-    # Дополнительные параметры запроса
-    # n_steps = serializers.IntegerField(
-    #     required=False,
-    #     default=300,
-    #     min_value=50,
-    #     max_value=1000
-    # )
-
-    guidance_scale = serializers.FloatField(
-        required=False,
-        default=9.5,
-        min_value=0.0,
-        max_value=20.0
-    )
-
     class Meta:
         model = ImageGenerationRequest
         fields = [
@@ -30,7 +15,7 @@ class ImageGenerationRequestSerializer(serializers.ModelSerializer):
             'guidance_scale', 'seed', 'generated_image', 
             'thumbnail', 'created_at'
         ]
-        read_only_fields = ['created_at', 'generated_image']  # Указываем поля, которые нельзя менять
+        read_only_fields = ['created_at', 'generated_image']
 
     def create(self, validated_data):
         # Проверка на наличие пользователя в запросе
@@ -61,3 +46,8 @@ class ImageGenerationRequestSerializer(serializers.ModelSerializer):
         if not value.strip():
             raise serializers.ValidationError("Prompt cannot be empty.")
         return value
+
+    def get_thumbnail_url(self, obj):
+        if obj.generated_image:
+            return obj.get_thumbnail_url()
+        return None

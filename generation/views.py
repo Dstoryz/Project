@@ -153,13 +153,11 @@ class HistoryView(APIView):
 
     def get(self, request):
         try:
-            logger.info(f"Fetching history for user: {request.user.username}")
             history = ImageGenerationRequest.objects.filter(
                 user=request.user
             ).order_by('-created_at')
             
             serializer = ImageGenerationRequestSerializer(history, many=True)
-            logger.info(f"Successfully fetched {len(history)} history items")
             return Response(serializer.data)
         except Exception as e:
             logger.error(f"Error fetching history: {str(e)}")

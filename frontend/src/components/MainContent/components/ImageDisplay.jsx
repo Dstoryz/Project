@@ -1,24 +1,10 @@
 import React from 'react';
-import { Box, CircularProgress, Typography, Paper, Button } from '@mui/material';
+import { Box, CircularProgress, Typography, Paper } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
-import RefreshIcon from '@mui/icons-material/Refresh';
 import ImageControls from './ImageControls';
 import './ImageDisplay.css';
 
-function ImageDisplay({ 
-  loading, 
-  generatedImage, 
-  error, 
-  onRetry,
-  onDownload,
-  onShare,
-  onFavorite 
-}) {
-  const handleImageError = (e) => {
-    console.error('Image failed to load:', e);
-    e.target.src = '';
-  };
-
+function ImageDisplay({ image, loading, error }) {
   return (
     <Paper className="image-display" elevation={0}>
       {loading ? (
@@ -30,33 +16,18 @@ function ImageDisplay({
         </Box>
       ) : error ? (
         <Box className="image-display-error">
-          <Typography color="error" gutterBottom>
+          <Typography color="error">
             {error}
           </Typography>
-          {onRetry && (
-            <Button
-              startIcon={<RefreshIcon />}
-              variant="outlined"
-              color="primary"
-              onClick={onRetry}
-            >
-              Попробовать снова
-            </Button>
-          )}
         </Box>
-      ) : generatedImage ? (
+      ) : image ? (
         <Box className="image-display-result">
           <img 
-            src={generatedImage} 
+            src={image} 
             alt="Generated" 
             className="generated-image"
-            onError={handleImageError}
           />
-          <ImageControls 
-            onDownload={onDownload}
-            onShare={onShare}
-            onFavorite={onFavorite}
-          />
+          <ImageControls />
         </Box>
       ) : (
         <Box className="image-display-placeholder">

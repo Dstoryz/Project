@@ -14,7 +14,16 @@ import { generationService } from './api/generationService';
 
 function App() {
   useEffect(() => {
-    generationService.initializeCSRF();
+    const initApp = async () => {
+      try {
+        await generationService.initializeCSRF();
+      } catch (error) {
+        console.warn('CSRF initialization failed:', error);
+        // Продолжаем работу даже если CSRF не инициализирован
+      }
+    };
+    
+    initApp();
   }, []);
 
   return (
