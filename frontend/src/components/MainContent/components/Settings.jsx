@@ -22,132 +22,147 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import './Settings.css';
 
 function Settings({ formData, onChange }) {
-  const [notification, setNotification] = useState({ open: false, message: '', severity: 'success' });
+  const [notification, setNotification] = useState({
+    open: false,
+    message: '',
+    severity: 'success'
+  });
 
-  const handleSliderChange = (name) => (event, newValue) => {
-    onChange({ target: { name, value: newValue } });
+  const handleCloseNotification = () => {
+    setNotification(prev => ({ ...prev, open: false }));
   };
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    onChange({ target: { name, value } });
+  const generateRandomSeed = () => {
+    const randomSeed = Math.floor(Math.random() * 1000000);
+    onChange({ target: { name: 'seed', value: randomSeed } });
   };
 
-  const handleCopySeed = async () => {
-    try {
-      await navigator.clipboard.writeText(formData.seed);
+  const handleCopySeed = () => {
+    if (formData.seed) {
+      navigator.clipboard.writeText(formData.seed.toString());
       setNotification({
         open: true,
         message: 'Seed скопирован в буфер обмена',
         severity: 'success'
       });
-    } catch (err) {
-      setNotification({
-        open: true,
-        message: 'Не удалось скопировать seed',
-        severity: 'error'
-      });
     }
   };
 
-  const generateRandomSeed = () => {
-    const newSeed = Math.floor(Math.random() * 1000000);
-    onChange({ target: { name: 'seed', value: newSeed } });
-  };
-
-  const handleCloseNotification = () => {
-    setNotification({ ...notification, open: false });
-  };
-
   return (
-    <Paper className="settings-panel" elevation={0}>
+    <Paper className="settings-panel">
       <Typography variant="h6" className="settings-title">
-        Generation Settings
+        Настройки генерации
       </Typography>
 
-      <FormControl fullWidth className="settings-control">
-        <InputLabel>Model</InputLabel>
-        <Select
-          name="model"
-          value={formData.model}
-          onChange={onChange}
-          label="Model"
-        >
-          {MODEL_OPTIONS.map(option => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-
-      <FormControl fullWidth className="settings-control">
-        <InputLabel>Style</InputLabel>
-        <Select
-          name="style"
-          value={formData.style}
-          onChange={onChange}
-          label="Style"
-        >
-          {STYLE_OPTIONS.map(option => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-
-      <Box className="settings-slider">
-        <Typography gutterBottom>
-          Steps: {formData.n_steps}
-        </Typography>
-        <Slider
-          value={formData.n_steps}
-          onChange={handleSliderChange('n_steps')}
-          min={50}
-          max={150}
-          step={1}
-          marks={[
-            { value: 50, label: '50' },
-            { value: 100, label: '100' },
-            { value: 150, label: '150' }
-          ]}
-        />
+      <Box className="settings-control">
+        <FormControl fullWidth>
+          <InputLabel>Модель</InputLabel>
+          <Select
+            value={formData.model}
+            onChange={onChange}
+            name="model"
+            label="Модель"
+          >
+            {MODEL_OPTIONS.map(option => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Box>
 
-      <Box className="settings-slider">
-        <Typography gutterBottom>
-          Guidance Scale: {formData.guidance_scale}
-        </Typography>
-        <Slider
-          value={formData.guidance_scale}
-          onChange={handleSliderChange('guidance_scale')}
-          min={1}
-          max={20}
-          step={0.1}
-          marks={[
-            { value: 1, label: '1' },
-            { value: 10, label: '10' },
-            { value: 20, label: '20' }
-          ]}
-        />
+      <Box className="settings-control">
+        <FormControl fullWidth>
+          <InputLabel>Стиль</InputLabel>
+          <Select
+            value={formData.style}
+            onChange={onChange}
+            name="style"
+            label="Стиль"
+          >
+            {STYLE_OPTIONS.map(option => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Box>
 
       <Box className="settings-group">
-        <Typography variant="subtitle2" className="settings-subtitle">
-          Seed
-          <Tooltip title="Seed определяет начальное состояние генерации. Одинаковый seed и промпт дадут похожий результат">
-            <IconButton size="small">
-              <InfoIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-        </Typography>
+        <Box className="settings-subtitle">
+          <Typography variant="subtitle2">
+            Количество шагов
+            <Tooltip title="Большее количество шагов может улучшить качество, но увеличит время генерации">
+              <IconButton size="small">
+                <InfoIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          </Typography>
+        </Box>
+        <Box className="settings-slider">
+          <Slider
+            value={formData.n_steps}
+            onChange={(e, value) => onChange({ target: { name: 'n_steps', value } })}
+            min={20}
+            max={150}
+            step={1}
+            marks={[
+              { value: 20, label: '20' },
+              { value: 75, label: '75' },
+              { value: 150, label: '150' }
+            ]}
+            valueLabelDisplay="auto"
+          />
+        </Box>
+      </Box>
+
+      <Box className="settings-group">
+        <Box className="settings-subtitle">
+          <Typography variant="subtitle2">
+            Guidance Scale
+            <Tooltip title="Контролирует насколько точно модель следует промпту. Высокие значения дают более точные, но менее креативные результаты">
+              <IconButton size="small">
+                <InfoIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          </Typography>
+        </Box>
+        <Box className="settings-slider">
+          <Slider
+            value={formData.guidance_scale}
+            onChange={(e, value) => onChange({ target: { name: 'guidance_scale', value } })}
+            min={1}
+            max={20}
+            step={0.1}
+            marks={[
+              { value: 1, label: '1' },
+              { value: 7.5, label: '7.5' },
+              { value: 20, label: '20' }
+            ]}
+            valueLabelDisplay="auto"
+          />
+        </Box>
+      </Box>
+
+      <Box className="settings-group">
+        <Box className="settings-subtitle">
+          <Typography variant="subtitle2">
+            Seed
+            <Tooltip title="Seed определяет начальный шум для генерации. Одинаковый seed с теми же настройками даст похожий результат">
+              <IconButton size="small">
+                <InfoIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          </Typography>
+        </Box>
         <TextField
           fullWidth
           name="seed"
           type="number"
           value={formData.seed || ''}
-          onChange={handleChange}
+          onChange={onChange}
           size="small"
           placeholder="Случайное значение"
           InputProps={{

@@ -5,6 +5,7 @@ export const ENDPOINTS = {
   HISTORY: '/generation/history/',
   LOGIN: '/login/',
   REFRESH: '/token/refresh/',
+  CSRF: '/csrf/'
 };
 
 export const API_CONFIG = {

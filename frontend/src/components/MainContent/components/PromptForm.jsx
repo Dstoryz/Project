@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import { Paper, TextField, Button, Box, Typography } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import './PromptForm.css';
 
-function PromptForm({ onSubmit, loading }) {
+const PromptForm = forwardRef(({ onSubmit, loading }, ref) => {
   const [prompt, setPrompt] = useState('');
+
+  // Экспортируем метод setPrompt через ref
+  useImperativeHandle(ref, () => ({
+    setPrompt: (newPrompt) => setPrompt(newPrompt)
+  }));
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -48,6 +53,6 @@ function PromptForm({ onSubmit, loading }) {
       </form>
     </Paper>
   );
-}
+});
 
 export default PromptForm; 

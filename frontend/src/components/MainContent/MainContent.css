@@ -1,49 +1,65 @@
 /* MainContent.css */
 .main-content {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  height: 100vh;
+  padding: var(--spacing-lg);
+  background-color: var(--background-dark);
 }
 
 .content-wrapper {
-  display: flex;
-  height: 100%;
-  gap: var(--spacing-md);
-  padding: var(--spacing-md);
+  display: grid;
+  grid-template-columns: 300px minmax(auto, 800px) 300px;
+  gap: var(--spacing-lg);
+  height: calc(100vh - 120px);
+  max-width: 100%;
+  margin: 0;
+  justify-content: space-between;
 }
 
-.history-section {
-  width: 300px;
-  min-width: 300px;
-  overflow: hidden;
-  background: var(--surface-light);
+.left-panel {
+  background: var(--surface-dark);
   border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: sticky;
+  top: var(--spacing-lg);
 }
 
-.center-section {
-  flex: 1;
-  min-width: 0;
+.center-panel {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
+  margin: 0 auto;
+  width: 100%;
+  max-width: 800px;
 }
 
-.settings-section {
-  width: 300px;
-  min-width: 300px;
+.image-section {
+  flex: 1;
+  background: var(--surface-dark);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  background: var(--surface-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 600px;
+}
+
+.prompt-section {
+  height: 150px;
+  padding: var(--spacing-md);
+  background: var(--surface-dark);
   border-radius: var(--radius-lg);
 }
 
-@media (max-width: 1024px) {
-  .content-wrapper {
-    flex-direction: column;
-  }
+.right-panel {
+  background: var(--surface-dark);
+  border-radius: var(--radius-lg);
+  position: sticky;
+  top: var(--spacing-lg);
+}
 
-  .history-section,
-  .settings-section {
-    width: 100%;
-    height: 300px;
+/* Медиа-запрос для адаптивности */
+@media (max-width: 1280px) {
+  .content-wrapper {
+    grid-template-columns: 250px minmax(auto, 700px) 250px;
   }
 }

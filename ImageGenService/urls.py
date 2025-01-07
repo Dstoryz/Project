@@ -8,6 +8,7 @@ from rest_framework import permissions
 from django.views.generic import RedirectView
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework_simplejwt.views import TokenRefreshView
+from generation.views import GetCSRFToken
 
 # Настройка Swagger
 schema_view = get_schema_view(
@@ -29,6 +30,7 @@ urlpatterns = [
     path('api/', include('users.urls')),
     path('api-auth/', include('rest_framework.urls')),
     path('', RedirectView.as_view(url='/api/')),
+    path('api/csrf/', GetCSRFToken.as_view(), name='get-csrf-token'),
 
     # URL-адреса для Swagger и Redoc
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

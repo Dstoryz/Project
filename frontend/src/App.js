@@ -16,10 +16,12 @@ function App() {
   useEffect(() => {
     const initApp = async () => {
       try {
-        await generationService.initializeCSRF();
+        const token = localStorage.getItem('token');
+        if (token) {
+          console.log('Found existing token');
+        }
       } catch (error) {
-        console.warn('CSRF initialization failed:', error);
-        // Продолжаем работу даже если CSRF не инициализирован
+        console.warn('App initialization error:', error);
       }
     };
     

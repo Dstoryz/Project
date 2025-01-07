@@ -24,6 +24,8 @@ logger = logging.getLogger(__name__)
 # Добавляем класс GetCSRFToken
 @method_decorator(ensure_csrf_cookie, name='dispatch') # CSRF отключён, убедитесь, что токен не требуется
 class GetCSRFToken(View):
+    permission_classes = []  # Разрешаем доступ без аутентификации
+    
     def get(self, request):
         return JsonResponse({'detail': 'CSRF cookie set'})
 
@@ -153,10 +155,12 @@ class HistoryView(APIView):
 
     def get(self, request):
         try:
+            logger.info(f"Fetching history for user {request.user.id}")
             history = ImageGenerationRequest.objects.filter(
                 user=request.user
             ).order_by('-created_at')
             
+            logger.info(f"Found {history.count()} items")
             serializer = ImageGenerationRequestSerializer(history, many=True)
             return Response(serializer.data)
         except Exception as e:

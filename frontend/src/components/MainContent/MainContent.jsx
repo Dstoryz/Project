@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Box } from '@mui/material';
 import ImageDisplay from './components/ImageDisplay';
 import HistoryPanel from './components/HistoryPanel';
@@ -20,6 +20,25 @@ function MainContent() {
     seed: ''
   });
 
+  const promptFormRef = useRef();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          console.error('No authentication token found');
+          return;
+        }
+        console.log('Auth token present:', token);
+      } catch (error) {
+        console.error('Auth check failed:', error);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
   const handleSettingsChange = (event) => {
     const { name, value } = event.target;
     setFormData(prev => ({
@@ -29,7 +48,22 @@ function MainContent() {
   };
 
   const handleImageSelect = (item) => {
-    setSelectedImage(item.generated_image);
+    const imageUrl = item.generated_image && item.generated_image.startsWith('http')
+      ? item.generated_image
+      : `http://localhost:8000${item.generated_image}`;
+
+    setSelectedImage(imageUrl);
+    setFormData({
+      model: item.model || 'stable-diffusion-v1-5',
+      style: item.style || 'none',
+      n_steps: item.n_steps || 75,
+      guidance_scale: item.guidance_scale || 7.5,
+      seed: item.seed || ''
+    });
+
+    if (promptFormRef.current) {
+      promptFormRef.current.setPrompt(item.prompt);
+    }
   };
 
   const handleGenerate = async (promptData) => {
@@ -59,21 +93,31 @@ function MainContent() {
   return (
     <Box className="main-content">
       <Box className="content-wrapper">
-        <Box className="history-section">
+        <Box className="left-panel">
           <HistoryPanel 
             onImageSelect={handleImageSelect}
             newGeneration={lastGeneration}
           />
         </Box>
-        <Box className="center-section">
-          <PromptForm onSubmit={handleGenerate} loading={loading} />
-          <ImageDisplay 
-            image={selectedImage}
-            loading={loading}
-            error={error}
-          />
+
+        <Box className="center-panel">
+          <Box className="image-section">
+            <ImageDisplay 
+              image={selectedImage}
+              loading={loading}
+              error={error}
+            />
+          </Box>
+          <Box className="prompt-section">
+            <PromptForm 
+              ref={promptFormRef}
+              onSubmit={handleGenerate} 
+              loading={loading} 
+            />
+          </Box>
         </Box>
-        <Box className="settings-section">
+
+        <Box className="right-panel">
           <Settings 
             formData={formData}
             onChange={handleSettingsChange}

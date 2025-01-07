@@ -22,11 +22,16 @@ export const generationService = {
 
   async getHistory() {
     try {
+      console.log('Making history request...');
       const response = await api.get(ENDPOINTS.HISTORY);
+      console.log('History response:', response);
       return response.data;
     } catch (error) {
       console.error('Error fetching history:', error);
-      throw new Error(error.response?.data?.detail || 'Failed to fetch history');
+      if (error.response?.status === 401) {
+        throw new Error('Необходима авторизация');
+      }
+      throw new Error(error.response?.data?.detail || 'Не удалось загрузить историю');
     }
   },
 
@@ -40,7 +45,7 @@ export const generationService = {
 
   async initializeCSRF() {
     try {
-      await api.get('/api/csrf/');
+      await api.get(ENDPOINTS.CSRF);
     } catch (error) {
       console.error('Failed to get CSRF token:', error);
     }

@@ -6,38 +6,21 @@ import { ENDPOINTS } from './config';
 export const authService = {
   async login(credentials) {
     try {
-      console.log('Attempting login with:', credentials.username);
-      const response = await api.post(ENDPOINTS.LOGIN, credentials, {
-        timeout: 5000,
-        retries: 2,
-        headers: {
-          'Accept': 'application/json',
-        }
-      });
+      console.log('Attempting login...');
+      const response = await api.post(ENDPOINTS.LOGIN, credentials);
+      console.log('Login successful, setting tokens...');
       
-      console.log('Login response:', response.data);
-      
-      // Сохраняем токены после успешного логина
       const { token, refresh } = response.data;
       localStorage.setItem('token', token);
       localStorage.setItem('refresh', refresh);
       
-      // Устанавливаем токен в заголовки для последующих запросов
+      // Устанавливаем токен в заголовки сразу после логина
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       
       return response.data;
     } catch (error) {
-      console.error('Login error details:', {
-        status: error.response?.status,
-        data: error.response?.data,
-        message: error.message
-      });
-      
-      if (error.message === 'Network Error') {
-        throw new Error('Unable to connect to server. Please check your internet connection.');
-      }
-      
-      throw new Error(error.response?.data?.detail || 'Login failed');
+      console.error('Login failed:', error);
+      throw error;
     }
   },
 
