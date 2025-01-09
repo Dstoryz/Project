@@ -1,0 +1,25 @@
+.image-controls {
+  position: absolute;
+  bottom: var(--spacing-md);
+  right: var(--spacing-md);
+  display: flex;
+  gap: var(--spacing-sm);
+  background: rgba(0, 0, 0, 0.5);
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-md);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.image-display-result:hover .image-controls {
+  opacity: 1;
+}
+
+.image-controls .MuiIconButton-root {
+  backdrop-filter: blur(4px);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.image-controls .MuiIconButton-root:hover {
+  background: rgba(255, 255, 255, 0.2);
+} 

@@ -1,0 +1,114 @@
+.image-display {
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--surface-dark) !important;
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden;
+  position: relative;
+  border: 2px solid #ff4444;
+}
+
+.image-display-loading,
+.image-display-error,
+.image-display-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl);
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+.image-display-result {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.generated-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.generated-image:hover {
+  transform: scale(1.02);
+}
+
+.image-display-error {
+  background-color: rgba(var(--error-rgb), 0.05);
+}
+
+.image-display-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-xl);
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  opacity: 0.85;
+  transition: opacity var(--transition-normal);
+}
+
+.image-display-placeholder .MuiSvgIcon-root {
+  font-size: 96px !important;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-lg);
+  opacity: 0.7;
+}
+
+.placeholder-text {
+  font-size: 1.75rem !important;
+  color: var(--text-primary);
+  max-width: 80%;
+  line-height: 1.5;
+  margin-bottom: var(--spacing-md) !important;
+  font-weight: 500 !important;
+}
+
+.placeholder-subtext {
+  font-size: 1.25rem !important;
+  color: var(--text-secondary);
+  max-width: 80%;
+  line-height: 1.4;
+  opacity: 0.8;
+}
+
+.image-display-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xl);
+  padding: var(--spacing-xl);
+  text-align: center;
+}
+
+.image-display-loading .MuiCircularProgress-root {
+  width: 64px !important;
+  height: 64px !important;
+}
+
+.loading-text {
+  font-size: 1.25rem !important;
+  color: var(--text-primary);
+  margin-top: var(--spacing-lg);
+}
+
+.image-display-result:hover .image-controls-wrapper {
+  opacity: 1;
+} 

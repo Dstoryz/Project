@@ -5,8 +5,9 @@ body {
 }
 
 .MuiContainer-root {
-  padding-top: 24px;
-  padding-bottom: 24px;
+  max-width: none !important;
+  padding: 0 !important;
+  width: 100%;
 }
 
 .MuiPaper-root {

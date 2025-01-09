@@ -1,47 +1,70 @@
-import { AppBar, Toolbar, Typography, Button, Grid } from '@mui/material';
-import PropTypes from 'prop-types';
+import React from 'react';
+import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
+import './Header.css';
 
-// Выносим строковые константы
-const TEXTS = {
-  TITLE: 'Image Generator',
-  LOGIN: 'Login',
-};
+function Header() {
+  const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuth();
 
-function Header({ onLoginClick }) {
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <Grid 
-          container 
-          alignItems="center" 
-          justifyContent="space-between" // Улучшаем выравнивание
-          spacing={2}
+    <AppBar position="static" className="header" elevation={0}>
+      <Toolbar className="header-toolbar">
+        <Typography 
+          variant="h6"
+          className="header-title"
+          onClick={() => navigate('/')}
         >
-          <Grid item>
-            <Typography variant="h6" component="h1">
-              {TEXTS.TITLE}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Button 
-              color="inherit" 
-              onClick={onLoginClick}
-            >
-              {TEXTS.LOGIN}
-            </Button>
-          </Grid>
-        </Grid>
+          Image Generator
+        </Typography>
+        <Box className="header-buttons">
+          {isAuthenticated ? (
+            <>
+              <Button 
+                variant="outlined" 
+                color="inherit"
+                onClick={() => navigate('/profile')}
+              >
+                Profile
+              </Button>
+              <Button 
+                variant="contained" 
+                color="primary"
+                onClick={logout}
+              >
+                Logout
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button 
+                variant="outlined" 
+                color="inherit"
+                onClick={() => navigate('/login')}
+              >
+                Login
+              </Button>
+              <Button 
+                variant="contained" 
+                color="primary"
+                onClick={() => navigate('/register')}
+              >
+                Register
+              </Button>
+            </>
+          )}
+          <Button
+            color="inherit"
+            onClick={() => navigate('/terms')}
+            sx={{ marginLeft: 2 }}
+          >
+            Пользовательское соглашение
+          </Button>
+        </Box>
       </Toolbar>
     </AppBar>
   );
 }
-
-Header.propTypes = {
-  onLoginClick: PropTypes.func,
-};
-
-Header.defaultProps = {
-  onLoginClick: () => {},
-};
 
 export default Header; 

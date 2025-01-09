@@ -1,0 +1,43 @@
+.terms-container {
+  padding: var(--spacing-xl) 0;
+  min-height: calc(100vh - var(--header-height));
+  background-color: var(--background-dark);
+}
+
+.terms-paper {
+  padding: var(--spacing-xl);
+  background-color: var(--background-light) !important;
+  color: var(--text-primary) !important;
+}
+
+.terms-title {
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xl) !important;
+  text-align: center;
+}
+
+.terms-content {
+  margin: var(--spacing-xl) 0;
+}
+
+.terms-content h5 {
+  color: var(--primary-color);
+  margin-top: var(--spacing-xl);
+}
+
+.terms-content p {
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-md);
+}
+
+.terms-date {
+  color: var(--text-secondary);
+  margin-top: var(--spacing-xl);
+  text-align: right;
+}
+
+.terms-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--spacing-xl);
+} 

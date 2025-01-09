@@ -1,0 +1,40 @@
+.header {
+  background-color: var(--background-light) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--spacing-xl) !important;
+  min-height: var(--header-height);
+}
+
+.header-title {
+  font-weight: 600;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.header-title:hover {
+  color: var(--primary-color);
+}
+
+.header-buttons {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.header-buttons .MuiButton-root {
+  min-width: 100px;
+  font-weight: 500;
+}
+
+.header-buttons .MuiButton-outlined {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.header-buttons .MuiButton-outlined:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+} 

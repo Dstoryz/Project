@@ -1,11 +1,18 @@
 from django.urls import path
-from .views import ImageGenerationRequestView
-from .views import HistoryView
-from django.conf import settings
-from django.conf.urls.static import static
+from .views import (
+    ImageGenerationRequestView,
+    HistoryView,
+    GetCSRFToken,
+    LoginView
+)
+
+app_name = 'generation'
 
 urlpatterns = [
+    path('generate/', ImageGenerationRequestView.as_view(), name='generate'),
     path('history/', HistoryView.as_view(), name='history'),
-    path('generate/', ImageGenerationRequestView.as_view(), name='image-generation'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('history/<int:pk>/', HistoryView.as_view(), name='history-detail'),
+    path('csrf/', GetCSRFToken.as_view(), name='get-csrf-token'),
+    path('login/', LoginView.as_view(), name='login'),
+]
 
