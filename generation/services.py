@@ -30,7 +30,7 @@ class TranslationService:
             translated = self.model.generate(**inputs)
             
             # Декодирование результата
-            translated_text = self.tokenizer.decode(translated[0], skip_special_tokens=True)
+            translated_text = self.tokenizer.decode(translated[0], skip_special_tokens=True)[:-1]
             
             return translated_text
         except Exception as e:

@@ -61,6 +61,7 @@ class ImageGenerationRequestView(APIView):
         """
         # Логируем все параметры запроса
         logger.info("Received generation request with parameters:")
+
         logger.info(f"Prompt: {request.data.get('prompt')}")
         logger.info(f"Model: {request.data.get('model')}")
         logger.info(f"Style: {request.data.get('style')}")
@@ -68,7 +69,6 @@ class ImageGenerationRequestView(APIView):
         logger.info(f"Guidance Scale: {request.data.get('guidance_scale')}")
         logger.info(f"Seed: {request.data.get('seed')}")
         logger.info(f"Full request data: {request.data}")
-
         logger.info(f"Request received from user {request.user.id}")
         prompt = request.data.get('prompt')
         
@@ -107,7 +107,7 @@ class ImageGenerationRequestView(APIView):
                 # Извлечение количества шагов
                 n_steps = request.data.get("n_steps", 75)
                 logger.info(f"Using n_steps: {n_steps}")
-
+                
                 # Загрузка модели
                 pipeline = self.load_model(model_name)
 
@@ -117,7 +117,9 @@ class ImageGenerationRequestView(APIView):
                     prompt=processed_prompt,
                     n_steps=n_steps,
                     guidance_scale=request.data.get("guidance_scale", 7.5),
-                    seed=request.data.get("seed")
+                    seed=request.data.get("seed"),
+                    height=request.data.get("height"),
+                    width=request.data.get("width")
                 )
 
                 # Сохранение изображения в модели
@@ -169,7 +171,7 @@ class ImageGenerationRequestView(APIView):
             logger.error(f"Failed to load model '{model_name}': {str(e)}")
             raise RuntimeError(f"Could not load model '{model_name}'.")
 
-    def generate_image(self, pipeline, prompt, n_steps, guidance_scale=7.5, seed=None):
+    def generate_image(self, pipeline, prompt, n_steps, guidance_scale=7.5, seed=None, height=512,width=512):
         """
         Генерирует изображение с помощью заданного пайплайна.
         """
@@ -188,6 +190,8 @@ class ImageGenerationRequestView(APIView):
         logger.info(f"Steps: {n_steps}")
         logger.info(f"Guidance Scale: {guidance_scale}")
         logger.info(f"Seed: {seed}")
+        logger.info(f"Hight: {height}")
+        logger.info(f"Width: {width}")
         logger.info("=" * 50)
 
         # Генерация изображения с полными параметрами
@@ -195,7 +199,9 @@ class ImageGenerationRequestView(APIView):
             prompt=prompt,
             num_inference_steps=n_steps,
             guidance_scale=guidance_scale,
-            generator=generator
+            generator=generator,
+            height=height,
+            width=width
         ).images[0]
 
         image_io = io.BytesIO()
