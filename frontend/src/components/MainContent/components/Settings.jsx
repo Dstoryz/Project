@@ -14,6 +14,7 @@ import {
   STYLE_OPTIONS,
   QUALITY_PRESETS,
   SAMPLER_OPTIONS,
+  RESOLUTION_OPTIONS,
 } from '../constants';
 import AdvancedSettings from './AdvancedSettings';
 import './Settings.css';
@@ -23,6 +24,14 @@ function Settings({ settings, onSettingsChange }) {
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
+  };
+
+  const handleResolutionChange = (event) => {
+    const selectedResolution = RESOLUTION_OPTIONS.find(opt => opt.value === event.target.value);
+    onSettingsChange({
+      width: selectedResolution.width,
+      height: selectedResolution.height
+    });
   };
 
   return (
@@ -82,6 +91,20 @@ function Settings({ settings, onSettingsChange }) {
                 }}
               >
                 {QUALITY_PRESETS.map(option => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl fullWidth margin="normal">
+              <Typography>Resolution</Typography>
+              <Select
+                value={`${settings.width}x${settings.height}`}
+                onChange={handleResolutionChange}
+              >
+                {RESOLUTION_OPTIONS.map(option => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>

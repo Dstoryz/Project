@@ -14,7 +14,7 @@ class ImageGenerationRequestSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'original_prompt', 'prompt', 'model', 'style', 
             'n_steps', 'guidance_scale', 'seed', 'generated_image', 
-            'thumbnail', 'created_at'
+            'thumbnail', 'created_at', 'width', 'height'
         ]
         read_only_fields = ['created_at', 'generated_image']
 

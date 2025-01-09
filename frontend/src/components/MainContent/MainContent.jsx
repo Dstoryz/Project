@@ -26,19 +26,14 @@ function MainContent() {
   const [settings, setSettings] = useState({
     model: 'stable-diffusion-v1-5',
     style: 'none',
-    quality_preset: 'normal',
-    n_steps: 50,
+    n_steps: 75,
     guidance_scale: 7.5,
+    seed: '',
     width: 512,
     height: 512,
-    negative_prompt: '',
-    sampler: 'DPM++ 2M Karras',
-    clip_skip: 1,
-    tiling: false,
-    hires_fix: false,
-    denoising_strength: 0.7,
-    safety_checker: true,
+    quality_preset: 'normal'
   });
+  const [prompt, setPrompt] = useState('');
 
   const promptFormRef = useRef();
 
@@ -95,40 +90,32 @@ function MainContent() {
     }
   };
 
-  const handleGenerate = async (promptData) => {
+  const handleGenerate = async (promptText) => {
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      setError(null);
-
-      // Убедимся, что prompt - это строка
-      const prompt = typeof promptData === 'string' ? promptData : promptData.prompt;
-
       const response = await generationService.generateImage({
-        prompt,
+        prompt: promptText,
         model: settings.model,
         style: settings.style,
-        n_steps: parseInt(settings.n_steps),
-        guidance_scale: parseFloat(settings.guidance_scale),
-        seed: settings.seed ? parseInt(settings.seed) : null,
-        width: parseInt(settings.width),
-        height: parseInt(settings.height),
-        negative_prompt: settings.negative_prompt || '',
-        sampler: settings.sampler,
-        clip_skip: parseInt(settings.clip_skip),
-        tiling: Boolean(settings.tiling),
-        hires_fix: Boolean(settings.hires_fix),
-        denoising_strength: parseFloat(settings.denoising_strength),
-        safety_checker: Boolean(settings.safety_checker)
+        n_steps: settings.n_steps,
+        guidance_scale: settings.guidance_scale,
+        seed: settings.seed || undefined,
+        width: settings.width,
+        height: settings.height,
       });
-
-      setSelectedImage(response.generated_image);
       setLastGeneration(response);
-    } catch (error) {
-      console.error('Generation error:', error);
-      setError(error.message);
+      setSelectedImage(response.generated_image);
+    } catch (err) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePromptSubmit = (promptText) => {
+    setPrompt(promptText);
+    handleGenerate(promptText);
   };
 
   const handleTemplateSelect = (template) => {
@@ -177,8 +164,8 @@ function MainContent() {
           <Box className="prompt-section">
             <PromptForm 
               ref={promptFormRef}
-              onSubmit={handleGenerate} 
-              loading={loading} 
+              onSubmit={handlePromptSubmit}
+              loading={loading}
             />
           </Box>
         </Box>
