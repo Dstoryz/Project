@@ -50,5 +50,24 @@ export const authService = {
 
   getToken() {
     return localStorage.getItem('token');
+  },
+
+  async register(userData) {
+    try {
+      console.log('Attempting registration...');
+      const response = await api.post(ENDPOINTS.REGISTER, userData);
+      console.log('Registration successful, setting tokens...');
+      
+      const { token, refresh } = response.data;
+      localStorage.setItem('token', token);
+      localStorage.setItem('refresh', refresh);
+      
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      
+      return response.data;
+    } catch (error) {
+      console.error('Registration failed:', error);
+      throw new Error(error.response?.data?.detail || 'Registration failed');
+    }
   }
 }; 

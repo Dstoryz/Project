@@ -17,19 +17,28 @@ class RegisterView(APIView):
     permission_classes = [AllowAny]
     
     def post(self, request):
-        serializer = UserRegistrationSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            refresh = RefreshToken.for_user(user)
-            return Response({
-                'token': str(refresh.access_token),
-                'refresh': str(refresh),
-                'user': {
-                    'username': user.username,
-                    'email': user.email
-                }
-            }, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            serializer = UserRegistrationSerializer(data=request.data)
+            if serializer.is_valid():
+                user = serializer.save()
+                refresh = RefreshToken.for_user(user)
+                return Response({
+                    'token': str(refresh.access_token),
+                    'refresh': str(refresh),
+                    'user': {
+                        'username': user.username,
+                        'email': user.email
+                    }
+                }, status=status.HTTP_201_CREATED)
+            return Response(
+                {'detail': serializer.errors}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response(
+                {'detail': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 @method_decorator(csrf_exempt_for_token, name='dispatch')
 class LoginView(APIView):
