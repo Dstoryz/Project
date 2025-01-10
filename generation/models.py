@@ -22,6 +22,7 @@ class ImageGenerationRequest(models.Model):
     prompt = models.TextField()  # Переведенный промт
     model = models.CharField(max_length=100, default='stable-diffusion-v1-5')
     style = models.CharField(max_length=100, default='base')
+    color_scheme = models.CharField(max_length=100, default='none')
     n_steps = models.IntegerField(default=20)
     guidance_scale = models.FloatField(default=7.5)
     seed = models.IntegerField(null=True, blank=True)

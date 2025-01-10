@@ -16,8 +16,6 @@ import {
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { 
   SAMPLER_OPTIONS, 
-  RESOLUTION_OPTIONS,
-  CLIP_SKIP_OPTIONS,
   ADVANCED_SETTINGS 
 } from '../constants';
 
@@ -86,22 +84,6 @@ function AdvancedSettings({ settings, onChange }) {
         />
       </Box>
 
-      <FormControl fullWidth margin="normal">
-        <Typography>Resolution</Typography>
-        <Select
-          value={`${settings.width}x${settings.height}`}
-          onChange={(e) => {
-            const [width, height] = e.target.value.split('x').map(Number);
-            onChange({ width, height });
-          }}
-        >
-          {RESOLUTION_OPTIONS.map(option => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
 
       <FormControl fullWidth margin="normal">
         <Typography>Sampler</Typography>

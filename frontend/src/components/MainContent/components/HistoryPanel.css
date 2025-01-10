@@ -87,6 +87,14 @@
   border-radius: 4px;
 }
 
+.history-color-scheme {
+  color: var(--text-secondary);
+  font-size: 0.75rem; 
+  margin-top: var(--spacing-xs);  
+  margin-bottom: var(--spacing-xs); 
+  margin-left: var(--spacing-xs);
+}
+
 .history-timestamp {
   color: var(--text-secondary);
   font-size: 0.75rem;

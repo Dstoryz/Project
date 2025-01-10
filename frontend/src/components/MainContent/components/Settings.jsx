@@ -12,7 +12,7 @@ import {
 import {
   MODEL_OPTIONS,
   STYLE_OPTIONS,
-  QUALITY_PRESETS,
+  COLOR_SCHEME,
   SAMPLER_OPTIONS,
   RESOLUTION_OPTIONS,
 } from '../constants';
@@ -78,24 +78,17 @@ function Settings({ settings, onSettingsChange }) {
             </FormControl>
 
             <FormControl fullWidth margin="normal">
-              <Typography>Quality Preset</Typography>
+              <Typography>Color Scheme</Typography>
               <Select
-                value={settings.quality_preset}
-                onChange={(e) => {
-                  const preset = QUALITY_PRESETS.find(p => p.value === e.target.value);
-                  onSettingsChange({
-                    quality_preset: e.target.value,
-                    n_steps: preset.steps,
-                    guidance_scale: preset.guidance
-                  });
-                }}
-              >
-                {QUALITY_PRESETS.map(option => (
+                value={settings.color_scheme}
+                onChange={(e) => onSettingsChange({ color_scheme: e.target.value })}
+                >
+                {COLOR_SCHEME.map(option => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
                 ))}
-              </Select>
+                              </Select>
             </FormControl>
 
             <FormControl fullWidth margin="normal">

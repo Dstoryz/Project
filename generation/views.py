@@ -98,7 +98,7 @@ class ImageGenerationRequestView(APIView):
                 processed_prompt = process_prompt(
                     image_request.prompt,
                     style=request.data.get("style"),
-                    color_scheme=request.data.get("colorScheme")
+                    color_scheme=request.data.get("color_scheme")
                 )
 
                 # Логируем обработанный промпт
@@ -119,9 +119,9 @@ class ImageGenerationRequestView(APIView):
                     guidance_scale=request.data.get("guidance_scale", 7.5),
                     seed=request.data.get("seed"),
                     height=request.data.get("height"),
-                    width=request.data.get("width")
+                    width=request.data.get("width"),
+                    
                 )
-
                 # Сохранение изображения в модели
                 image_request.generated_image.save(
                     f"{image_request.id}_image.png",
@@ -250,10 +250,44 @@ def process_prompt(prompt, style=None, color_scheme=None):
     settings = []
     if style:
         settings.append(f"{style.capitalize()} style")
-    if color_scheme == 'vibrant':
-        settings.append("vibrant color scheme")
-    elif color_scheme == 'monochrome':
-        settings.append("monochrome color scheme")
-    elif color_scheme == 'pastel':
-        settings.append("pastel colors")
+    if color_scheme:
+        if color_scheme == 'vibrant':
+            settings.append("vibrant and saturated colors")
+        elif color_scheme == 'monochrome':
+            settings.append("monochromatic color scheme")
+        elif color_scheme == 'pastel':
+            settings.append("soft pastel colors")
+        elif color_scheme == 'dark':
+            settings.append("dark and moody tones")
+        elif color_scheme == 'neon':
+            settings.append("bright neon colors")
+        elif color_scheme == 'sepia':
+            settings.append("warm sepia tones")
+        elif color_scheme == 'vintage':
+            settings.append("faded vintage colors")
+        elif color_scheme == 'cyberpunk':
+            settings.append("cyberpunk neon and dark contrast")
+        elif color_scheme == 'autumn':
+            settings.append("warm autumn colors")
+        elif color_scheme == 'winter':
+            settings.append("cool winter tones")
+        elif color_scheme == 'summer':
+            settings.append("bright summer colors")
+        elif color_scheme == 'spring':
+            settings.append("fresh spring colors")
+        elif color_scheme == 'muted':
+            settings.append("muted and subtle colors")
+        elif color_scheme == 'earthy':
+            settings.append("natural earth tones")
+        elif color_scheme == 'rainbow':
+            settings.append("full spectrum of rainbow colors")
+        elif color_scheme == 'duotone':
+            settings.append("two-color contrast scheme")
+        elif color_scheme == 'noir':
+            settings.append("high contrast black and white, film noir style")
+        elif color_scheme == 'watercolor':
+            settings.append("soft watercolor palette")
+        elif color_scheme == 'synthwave':
+            settings.append("retro synthwave purple and blue neon")
+    
     return f"{prompt}, {', '.join(settings)}" if settings else prompt

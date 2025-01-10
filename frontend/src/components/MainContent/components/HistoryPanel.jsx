@@ -47,6 +47,7 @@ function HistoryPanel({ onImageSelect, newGeneration }) {
       seed: item.seed !== null ? item.seed.toString() : '',
       width: parseInt(item.width) || 512,
       height: parseInt(item.height) || 512,
+      color_scheme: item.color_scheme || 'none',
       negative_prompt: item.negative_prompt || '',
       sampler: item.sampler || 'DPM++ 2M Karras',
       clip_skip: parseInt(item.clip_skip) || 1,
@@ -100,6 +101,9 @@ function HistoryPanel({ onImageSelect, newGeneration }) {
               </Typography>
               <Typography className="history-seed" variant="caption">
                 Seed: {item.seed || 'Random'}
+              </Typography>
+              <Typography className="history-color-scheme" variant="caption">
+                Color Scheme: {item.color_scheme || 'None'}
               </Typography>
             </Box>
           </Box>

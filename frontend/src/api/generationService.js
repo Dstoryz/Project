@@ -20,6 +20,7 @@ export const generationService = {
         hires_fix: data.hires_fix,
         denoising_strength: data.denoising_strength,
         safety_checker: data.safety_checker,
+        color_scheme: data.color_scheme
       });
       return response.data;
     } catch (error) {
