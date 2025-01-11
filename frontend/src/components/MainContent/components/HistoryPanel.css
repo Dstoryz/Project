@@ -95,7 +95,3 @@
   margin-left: var(--spacing-xs);
 }
 
-.history-timestamp {
-  color: var(--text-secondary);
-  font-size: 0.75rem;
-} 

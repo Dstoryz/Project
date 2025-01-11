@@ -103,7 +103,7 @@ function HistoryPanel({ onImageSelect, newGeneration }) {
                 Seed: {item.seed || 'Random'}
               </Typography>
               <Typography className="history-color-scheme" variant="caption">
-                Color Scheme: {item.color_scheme || 'None'}
+                Color: {item.color_scheme || 'None'}
               </Typography>
             </Box>
           </Box>
