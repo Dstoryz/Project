@@ -3,13 +3,14 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserRegistrationSerializer, UserLoginSerializer
+from .serializers import UserRegistrationSerializer, UserLoginSerializer, UserProfileSerializer, UserStatsSerializer
 from django.contrib.auth import authenticate
 import logging
 from django.utils.decorators import method_decorator
 from .decorators import csrf_exempt_for_token
+from .models import UserProfile
 
 logger = logging.getLogger(__name__)
 
@@ -78,3 +79,28 @@ class LoginView(APIView):
                 {'detail': 'Server error occurred'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+class UserProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        serializer = UserProfileSerializer(request.user.profile)
+        return Response(serializer.data)
+    
+    def put(self, request):
+        serializer = UserProfileSerializer(
+            request.user.profile,
+            data=request.data,
+            partial=True
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UserStatsView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        serializer = UserStatsSerializer(request.user)
+        return Response(serializer.data)

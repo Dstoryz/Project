@@ -9,9 +9,11 @@ import MainContent from './components/MainContent/MainContent';
 import { AuthProvider } from './contexts/AuthContext';
 import { theme } from './theme/theme';
 import './styles/global.css';
+import './styles/transitions.css';
 import ProtectedRoute from './components/ProtectedRoute';
 import { generationService } from './api/generationService';
 import TermsOfService from './components/Legal/TermsOfService';
+import Profile from './components/Profile/Profile';
 
 function App() {
   useEffect(() => {
@@ -40,6 +42,11 @@ function App() {
               <Route path="/" element={
                 <ProtectedRoute>
                   <MainContent />
+                </ProtectedRoute>
+              } />
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <Profile />
                 </ProtectedRoute>
               } />
               <Route path="/login" element={<LoginPage />} />

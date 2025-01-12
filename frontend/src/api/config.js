@@ -6,7 +6,9 @@ export const ENDPOINTS = {
   LOGIN: '/login/',
   REGISTER: '/register/',
   REFRESH: '/token/refresh/',
-  CSRF: '/csrf/'
+  CSRF: '/csrf/',
+  PROFILE: '/users/profile/',
+  USER_STATS: '/users/stats/'
 };
 
 export const API_CONFIG = {
