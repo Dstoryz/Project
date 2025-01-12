@@ -29,26 +29,30 @@ export const generationService = {
     }
   },
 
-  async getHistory() {
+  async getHistory(filters = {}) {
     try {
-      console.log('Making history request...');
-      const response = await api.get(ENDPOINTS.HISTORY);
-      console.log('History response:', response);
+      const params = new URLSearchParams(filters);
+      const response = await api.get(`${ENDPOINTS.HISTORY}?${params}`);
       return response.data;
     } catch (error) {
-      console.error('Error fetching history:', error);
-      if (error.response?.status === 401) {
-        throw new Error('Необходима авторизация');
-      }
-      throw new Error(error.response?.data?.detail || 'Не удалось загрузить историю');
+      throw new Error(error.response?.data?.detail || 'Failed to fetch history');
     }
   },
 
-  async deleteFromHistory(id) {
+  async deleteImage(imageId) {
     try {
-      await api.delete(`${ENDPOINTS.HISTORY}${id}/`);
+      await api.delete(`${ENDPOINTS.HISTORY}${imageId}/`);
     } catch (error) {
       throw new Error(error.response?.data?.detail || 'Failed to delete image');
+    }
+  },
+
+  async toggleFavorite(imageId) {
+    try {
+      const response = await api.post(`${ENDPOINTS.HISTORY}${imageId}/favorite/`);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.detail || 'Failed to toggle favorite');
     }
   },
 

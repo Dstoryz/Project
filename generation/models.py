@@ -41,6 +41,8 @@ class ImageGenerationRequest(models.Model):
     hires_fix = models.BooleanField(default=False)
     denoising_strength = models.FloatField(default=0.7)
     safety_checker = models.BooleanField(default=True)
+    tags = models.ManyToManyField('ImageTag', blank=True)
+    favorites = models.ManyToManyField(User, related_name='favorite_images', blank=True)
 
     def __str__(self):
         return self.prompt
@@ -82,3 +84,45 @@ class PromptTemplate(models.Model):
 
     def __str__(self):
         return self.name
+
+class ImageCollection(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    is_public = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+
+class SharedImage(models.Model):
+    image = models.ForeignKey(ImageGenerationRequest, on_delete=models.CASCADE)
+    shared_with = models.ForeignKey(User, on_delete=models.CASCADE)
+    can_edit = models.BooleanField(default=False)
+    shared_at = models.DateTimeField(auto_now_add=True)
+
+class ImageTag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.name
+
+class ImageRating(models.Model):
+    image = models.ForeignKey(ImageGenerationRequest, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ['image', 'user']
+
+class ImageComment(models.Model):
+    image = models.ForeignKey(ImageGenerationRequest, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-created_at']

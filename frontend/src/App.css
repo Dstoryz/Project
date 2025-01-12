@@ -13,3 +13,21 @@ body {
 .MuiPaper-root {
   height: 100%;
 }
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  margin: 0;
+  background-color: var(--background-dark);
+  position: relative;
+  z-index: 2;
+  padding-bottom: 300px;
+}

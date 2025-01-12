@@ -58,7 +58,7 @@ def generate_and_save(pipeline, params, filename_prefix):
         for k, v in params.items():
             f.write(f"{k}: {v}\n")
     
-    print(f"Saved to {image_path}")
+    print(f"Saved to {image_path}") 
     return image
 
 # Расширенные тестовые наборы

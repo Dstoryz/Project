@@ -14,6 +14,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { generationService } from './api/generationService';
 import TermsOfService from './components/Legal/TermsOfService';
 import Profile from './components/Profile/Profile';
+import HistoryPage from './components/History/HistoryPage';
+import Footer from './components/Footer/Footer';
 
 function App() {
   useEffect(() => {
@@ -52,8 +54,14 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/terms" element={<TermsOfService />} />
+              <Route path="/history" element={
+                <ProtectedRoute>
+                  <HistoryPage />
+                </ProtectedRoute>
+              } />
             </Routes>
           </main>
+          <Footer />
         </div>
       </ThemeProvider>
     </AuthProvider>

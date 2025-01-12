@@ -151,3 +151,24 @@ body {
     color: black;
   }
 }
+
+/* Добавить анимации для улучшения отзывчивости */
+.interactive-element {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.interactive-element:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Добавить скелетон-загрузку */
+.skeleton-loader {
+  background: linear-gradient(90deg, 
+    var(--surface-dark) 25%, 
+    var(--background-light) 50%, 
+    var(--surface-dark) 75%
+  );
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}

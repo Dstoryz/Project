@@ -1,5 +1,7 @@
 import logging
 from transformers import MarianMTModel, MarianTokenizer
+from django.core.cache import cache
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
@@ -37,3 +39,22 @@ class TranslationService:
             logger.error(f"Translation error: {e}")
             # В случае ошибки возвращаем оригинальный текст
             return text 
+
+class ImageGenerationService:
+    def __init__(self):
+        self.cache_timeout = settings.CACHE_TIMEOUT
+        
+    def get_user_history(self, user_id):
+        cache_key = f'user_history_{user_id}'
+        history = cache.get(cache_key)
+        
+        if history is None:
+            history = ImageGenerationRequest.objects.filter(
+                user_id=user_id
+            ).select_related('user').prefetch_related('tags')
+            cache.set(cache_key, history, self.cache_timeout)
+            
+        return history
+        
+    def invalidate_user_cache(self, user_id):
+        cache.delete(f'user_history_{user_id}') 

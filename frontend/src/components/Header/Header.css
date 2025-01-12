@@ -37,4 +37,15 @@
 
 .header-buttons .MuiButton-outlined:hover {
   border-color: rgba(255, 255, 255, 0.5);
+}
+
+.nav-button {
+  color: var(--text-primary) !important;
+  margin-right: var(--spacing-md) !important;
+  transition: all var(--transition-normal) !important;
+}
+
+.nav-button:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  transform: translateY(-2px);
 } 
