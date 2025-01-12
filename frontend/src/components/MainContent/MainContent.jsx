@@ -104,7 +104,8 @@ function MainContent() {
         seed: settings.seed || undefined,
         width: settings.width,
         height: settings.height,
-        color_scheme: settings.color_scheme
+        color_scheme: settings.color_scheme,
+        safety_checker: settings.safety_checker
       });
       setLastGeneration(response);
       setSelectedImage(response.generated_image);

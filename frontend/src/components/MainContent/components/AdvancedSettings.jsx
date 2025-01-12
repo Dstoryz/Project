@@ -13,11 +13,58 @@ import {
   InputAdornment,
   IconButton,
 } from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import ExplicitIcon from '@mui/icons-material/Explicit';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import { 
   SAMPLER_OPTIONS, 
   ADVANCED_SETTINGS 
 } from '../constants';
+
+const SETTINGS_INFO = {
+  seed: {
+    title: "Seed",
+    description: "Уникальное число, определяющее результат генерации. Одинаковый seed при тех же настройках даст одинаковый результат"
+  },
+  steps: {
+    title: "Steps",
+    description: "Количество шагов генерации. Больше шагов = лучше качество, но дольше генерация"
+  },
+  guidance_scale: {
+    title: "Guidance Scale",
+    description: "Насколько строго модель следует промпту. Высокие значения дают более точный результат, но могут ухудшить качество"
+  },
+  sampler: {
+    title: "Sampler",
+    description: "Алгоритм генерации изображения. Разные сэмплеры дают разные результаты и скорость работы"
+  },
+  negative_prompt: {
+    title: "Negative Prompt",
+    description: "Описание того, чего НЕ должно быть на изображении"
+  },
+  denoising_strength: {
+    title: "Denoising Strength",
+    description: "Сила шумоподавления. Влияет на степень изменения исходного изображения"
+  },
+  safety_filter: {
+    title: "Safety Filter",
+    description: "Фильтрует NSFW-контент и неприемлемые изображения. Может размыть или заблокировать части изображения, которые считает небезопасными. Рекомендуется оставить включенным."
+  }
+};
+
+function SettingLabel({ title, description }) {
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Typography>{title}</Typography>
+      <Tooltip title={description} placement="right">
+        <IconButton size="small" sx={{ padding: '2px' }}>
+          <HelpOutlineIcon sx={{ fontSize: '1rem', color: 'text.secondary' }} />
+        </IconButton>
+      </Tooltip>
+    </Box>
+  );
+}
 
 function AdvancedSettings({ settings, onChange }) {
   const generateRandomSeed = () => {
@@ -28,7 +75,7 @@ function AdvancedSettings({ settings, onChange }) {
   return (
     <Box className="advanced-settings">
       <FormControl fullWidth margin="normal">
-        <Typography>Seed</Typography>
+        <SettingLabel {...SETTINGS_INFO.seed} />
         <TextField
           value={settings.seed || ''}
           onChange={(e) => onChange({ seed: e.target.value })}
@@ -49,7 +96,7 @@ function AdvancedSettings({ settings, onChange }) {
       </FormControl>
 
       <Box>
-        <Typography>Steps ({settings.n_steps})</Typography>
+        <SettingLabel {...SETTINGS_INFO.steps} />
         <Slider
           value={settings.n_steps}
           min={20}
@@ -67,7 +114,7 @@ function AdvancedSettings({ settings, onChange }) {
       </Box>
 
       <Box>
-        <Typography>Guidance Scale ({settings.guidance_scale})</Typography>
+        <SettingLabel {...SETTINGS_INFO.guidance_scale} />
         <Slider
           value={settings.guidance_scale}
           min={1}
@@ -84,9 +131,8 @@ function AdvancedSettings({ settings, onChange }) {
         />
       </Box>
 
-
       <FormControl fullWidth margin="normal">
-        <Typography>Sampler</Typography>
+        <SettingLabel {...SETTINGS_INFO.sampler} />
         <Select
           value={settings.sampler}
           onChange={(e) => onChange({ sampler: e.target.value })}
@@ -99,18 +145,21 @@ function AdvancedSettings({ settings, onChange }) {
         </Select>
       </FormControl>
 
-      <TextField
-        fullWidth
-        multiline
-        rows={2}
-        margin="normal"
-        label="Negative Prompt"
-        value={settings.negative_prompt}
-        onChange={(e) => onChange({ negative_prompt: e.target.value })}
-      />
+      <Box>
+        <SettingLabel {...SETTINGS_INFO.negative_prompt} />
+        <TextField
+          fullWidth
+          multiline
+          rows={2}
+          margin="normal"
+          label="Negative Prompt"
+          value={settings.negative_prompt}
+          onChange={(e) => onChange({ negative_prompt: e.target.value })}
+        />
+      </Box>
 
       <Box>
-        <Typography>Denoising Strength</Typography>
+        <SettingLabel {...SETTINGS_INFO.denoising_strength} />
         <Slider
           value={settings.denoising_strength}
           min={0}
@@ -120,7 +169,40 @@ function AdvancedSettings({ settings, onChange }) {
         />
       </Box>
 
-      {Object.entries(ADVANCED_SETTINGS).map(([key, setting]) => (
+      <Box className="setting-group">
+        <SettingLabel {...SETTINGS_INFO.safety_filter} />
+        <FormControlLabel
+          control={
+            <Switch
+              checked={settings.safety_checker}
+              onChange={(e) => onChange({ safety_checker: e.target.checked })}
+            />
+          }
+          label={
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography>Safety Filter</Typography>
+              <Box
+                sx={{
+                  width: '24px',
+                  height: '24px',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: settings.safety_checker ? 'success.main' : 'error.main',
+                  color: 'white',
+                  fontSize: '0.75rem',
+                  fontWeight: 'bold'
+                }}
+              >
+                18+
+              </Box>
+            </Box>
+          }
+        />
+      </Box>
+
+      {Object.entries(ADVANCED_SETTINGS).filter(([key]) => key !== 'safety_checker').map(([key, setting]) => (
         <Tooltip key={key} title={setting.description}>
           <FormControlLabel
             control={

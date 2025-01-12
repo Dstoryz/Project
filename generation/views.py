@@ -120,7 +120,7 @@ class ImageGenerationRequestView(APIView):
                     seed=request.data.get("seed"),
                     height=request.data.get("height"),
                     width=request.data.get("width"),
-                    
+                    safety_checker=request.data.get("safety_checker", False)
                 )
                 # Сохранение изображения в модели
                 image_request.generated_image.save(
@@ -171,7 +171,7 @@ class ImageGenerationRequestView(APIView):
             logger.error(f"Failed to load model '{model_name}': {str(e)}")
             raise RuntimeError(f"Could not load model '{model_name}'.")
 
-    def generate_image(self, pipeline, prompt, n_steps, guidance_scale=7.5, seed=None, height=512,width=512):
+    def generate_image(self, pipeline, prompt, n_steps, guidance_scale=7.5, seed=None, height=512,width=512, safety_checker=False):
         """
         Генерирует изображение с помощью заданного пайплайна.
         """
@@ -192,6 +192,7 @@ class ImageGenerationRequestView(APIView):
         logger.info(f"Seed: {seed}")
         logger.info(f"Hight: {height}")
         logger.info(f"Width: {width}")
+        logger.info(f"Safety Checker: {safety_checker}")
         logger.info("=" * 50)
 
         # Генерация изображения с полными параметрами
@@ -201,7 +202,8 @@ class ImageGenerationRequestView(APIView):
             guidance_scale=guidance_scale,
             generator=generator,
             height=height,
-            width=width
+            width=width,
+            safety_checker=safety_checker
         ).images[0]
 
         image_io = io.BytesIO()

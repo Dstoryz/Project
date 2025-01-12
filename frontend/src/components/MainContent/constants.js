@@ -87,7 +87,7 @@ export const ADVANCED_SETTINGS = {
     description: 'Improve quality for high-resolution images'
   },
   safety_checker: {
-    label: 'Safety Checker',
-    description: 'Filter inappropriate content'
+    label: 'Safety Filter',
+    description: 'Filter NSFW content and inappropriate images (recommended)',
   }
 }; 
